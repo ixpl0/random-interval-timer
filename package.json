@@ -1,0 +1,27 @@
+{
+  "name": "random-interval-timer",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "pack": "npx @electron/packager . --platform=win32 --arch=x64 --out=dist --overwrite --ignore=dist --icon=icon.ico --app-name=random-timer",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "timer",
+    "electron",
+    "random",
+    "interval"
+  ],
+  "author": "",
+  "license": "ISC",
+  "description": "Random interval timer with a beep sound, ranging from a minimum of 1 second to a maximum of 99 hours, 59 minutes, and 59 seconds",
+  "devDependencies": {
+    "@electron/packager": "^18.3.6",
+    "electron": "^37.2.1"
+  },
+  "dependencies": {
+    "canvas": "^3.1.2"
+  }
+}
