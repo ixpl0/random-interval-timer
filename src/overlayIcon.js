@@ -86,7 +86,7 @@ const drawTime = (ctx, line1, line2, width, height) => {
   drawDigit(ctx, line2[1], startX + CONSTANTS.DIGIT_WIDTH + CONSTANTS.SPACING, secondLineY, CONSTANTS.TEXT_COLOR);
 };
 
-const createOverlayIcon = text => {
+const createOverlayIcon = (text) => {
   const { CANVAS_SIZE, BORDER_RADIUS, BACKGROUND_COLOR } = CONSTANTS;
   const canvas = createCanvas(CANVAS_SIZE, CANVAS_SIZE);
   const ctx = canvas.getContext('2d');

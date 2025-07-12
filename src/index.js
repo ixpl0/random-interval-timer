@@ -58,8 +58,10 @@ const createWindow = () => {
     width: 170,
     height: 90,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
+      nodeIntegration: false,
+      contextIsolation: true,
+      enableRemoteModule: false,
+      preload: path.join(__dirname, 'preload.js'),
       backgroundThrottling: false
     },
     title: 'Random Timer',
@@ -72,7 +74,13 @@ const createWindow = () => {
     icon: path.join(__dirname, 'icon.ico')
   });
 
-  mainWindow.loadFile('renderer.html');
+  const isDev = process.argv.includes('--dev');
+  if (isDev) {
+    mainWindow.loadURL('http://localhost:3000');
+    // mainWindow.webContents.openDevTools();
+  } else {
+    mainWindow.loadFile(path.join(__dirname, '..', 'dist-react', 'index.html'));
+  }
 
   powerSaveId = powerSaveBlocker.start('prevent-app-suspension');
 

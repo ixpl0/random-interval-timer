@@ -3,14 +3,14 @@
   src: url('./bitdust1.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
 }
 
 * {
   box-sizing: border-box;
 }
 
-body {
+html, body, #root {
   margin: 0;
   padding: 0;
   width: 170px;
@@ -26,7 +26,7 @@ body {
 .page-wrapper {
   width: 100%;
   height: 100%;
-  background: #2c3e50;
+  background-color: #2c3e50;
   border-radius: 14px;
   overflow: hidden;
   display: flex;
@@ -37,7 +37,7 @@ body {
 }
 
 .header {
-  background: #2c3e50;
+  background-color: #2c3e50;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -55,38 +55,36 @@ body {
       cursor: pointer;
       box-shadow: none;
       outline: none;
+      transition: background-color 0.2s;
       -webkit-app-region: no-drag;
 
-      &:hover {
-      }
-
-      &:focus {
+      &:focus-visible {
         outline: none;
         box-shadow: 0 0 0 2px #fff;
         animation: fadeBoxShadow 0.5s forwards;
       }
 
       &.close-button {
-        background: #e74c3c;
+        background-color: #e74c3c;
 
         &:hover {
-          background: #c0392b;
+          background-color: #c0392b;
         }
       }
 
       &.settings-button {
-        background: #27ae60;
+        background-color: #27ae60;
 
         &:hover {
-          background: #219150;
+          background-color: #219150;
         }
       }
 
       &.minimize-button {
-        background: #f1c40f;
+        background-color: #f1c40f;
 
         &:hover {
-          background: #bfa100;
+          background-color: #bfa100;
         }
       }
     }
@@ -104,32 +102,37 @@ body {
     height: 100%;
     border: none;
     border-radius: 8px;
-    background: #3498db;
+    background-color: #3498db;
     color: white;
     font-family: 'bitdust1', monospace;
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
     box-shadow: none;
-    transition: background 0.2s, color 0.2s;
+    transition: background-color 0.2s;
     outline: none;
     -webkit-app-region: no-drag;
 
     &:hover {
-      background: #2980b9;
+      background-color: #2980b9;
     }
 
-    &:active {
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px #fff;
+      animation: fadeBoxShadow 0.5s forwards;
     }
 
     &.active-timer {
       background-color: #e74c3c;
+
+      &:hover {
+        background-color: #c0392b;
+      }
     }
 
-    &:focus {
-      outline: none;
-      box-shadow: 0 0 0 3px #fff;
-      animation: fadeBoxShadow 0.5s forwards;
+    &.beeping {
+      outline: 3px solid #e74c3c;
     }
   }
 
@@ -138,6 +141,10 @@ body {
     display: none;
     flex-direction: column;
     gap: 5px;
+
+    &.visible {
+      display: flex;
+    }
 
     .settings-row {
       display: flex;
@@ -157,7 +164,7 @@ body {
       }
 
       .time-mini-input {
-        background: #2c3845;
+        background-color: #2c3845;
         border: 1px solid #4a5f7a;
         border-radius: 6px;
         color: white;

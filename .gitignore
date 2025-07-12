@@ -5,6 +5,7 @@
 .nitro
 .cache
 dist
+dist-react
 
 # Node dependencies
 node_modules

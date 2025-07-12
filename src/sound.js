@@ -1,6 +1,6 @@
 let audioContext = null;
 
-const initAudio = () => {
+export const initAudio = () => {
   if (!audioContext) {
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
   }
@@ -10,21 +10,18 @@ const initAudio = () => {
   }
 };
 
-const playBeep = () => new Promise((resolve) => {
+export const playBeep = () => new Promise((resolve) => {
   try {
     if (!audioContext || audioContext.state !== 'running') {
       initAudio();
 
       if (audioContext.state !== 'running') {
-        console.error('AudioContext is not running, cannot play beep');
         resolve();
-
         return;
       }
     }
 
     const oscillator = audioContext.createOscillator();
-
     oscillator.type = 'square';
     oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
 
@@ -46,5 +43,3 @@ const playBeep = () => new Promise((resolve) => {
     resolve();
   }
 });
-
-module.exports = { initAudio, playBeep };
