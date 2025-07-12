@@ -60,9 +60,8 @@ const createWindow = () => {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      enableRemoteModule: false,
       preload: path.join(__dirname, 'preload.js'),
-      backgroundThrottling: false
+      backgroundThrottling: false,
     },
     title: 'Random Timer',
     resizable: false,
@@ -71,13 +70,12 @@ const createWindow = () => {
     autoHideMenuBar: true,
     frame: false,
     transparent: true,
-    icon: path.join(__dirname, 'icon.ico')
+    icon: path.join(__dirname, 'icon.ico'),
   });
 
   const isDev = process.argv.includes('--dev');
   if (isDev) {
     mainWindow.loadURL('http://localhost:3000');
-    // mainWindow.webContents.openDevTools();
   } else {
     mainWindow.loadFile(path.join(__dirname, '..', 'dist-react', 'index.html'));
   }
@@ -95,14 +93,9 @@ const createWindow = () => {
     console.error('Main window is unresponsive');
     process.exit(1);
   });
-
-  mainWindow.on('crashed', () => {
-    console.error('Main window crashed');
-    process.exit(1);
-  });
 };
 
-app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required')
+app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 app.disableHardwareAcceleration();
 app.setName('Random Timer');
 
