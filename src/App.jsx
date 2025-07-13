@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import { theme } from './constants/theme';
 import { useTimer } from './hooks/useTimer';
 import { useSettings } from './hooks/useSettings';
+import { initAudio } from './utils/audioUtils';
 import { Header } from './components/Header';
 import { MainButton } from './components/MainButton';
 import { SettingsView } from './components/SettingsView';
@@ -10,13 +12,13 @@ import './index.css';
 const PageWrapper = styled.div`
   width: 100%;
   height: 100%;
-  background-color: #2c3e50;
-  border-radius: 14px;
+  background-color: ${theme.colors.background};
+  border-radius: ${theme.sizes.borderRadiusLarge};
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: 6px;
-  gap: 6px;
+  padding: ${theme.sizes.paddingMedium};
+  gap: ${theme.sizes.gapMedium};
   -webkit-app-region: drag;
 `;
 
@@ -44,6 +46,10 @@ function App() {
     isBeeping,
     toggleTimer,
   } = useTimer(settings);
+
+  useEffect(() => {
+    initAudio();
+  }, []);
 
   return (
     <PageWrapper>

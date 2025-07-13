@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
+import { theme } from '../constants/theme';
 import { TimeInputComponent } from './TimeInput';
 
 const SettingsContainer = styled.div`
-  font-size: 16px;
+  font-size: ${theme.typography.fontSize.small};
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -12,11 +13,11 @@ const SettingsContainer = styled.div`
 const SettingsRow = styled.div`
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: ${theme.sizes.gapSmall};
 `;
 
 const SettingsLabel = styled.div`
-  color: #bdc3c7;
+  color: ${theme.colors.textSecondary};
   width: 40px;
 `;
 

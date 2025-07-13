@@ -1,14 +1,14 @@
 {
   "name": "random-interval-timer",
   "version": "1.0.0",
-  "main": "src/index.js",
+  "main": "node/index.js",
   "scripts": {
     "start": "electron .",
     "dev": "electron . --dev",
     "build": "vite build",
     "preview": "vite preview",
     "dev:vite": "vite",
-    "pack": "npm run build && npx @electron/packager . --platform=win32 --arch=x64 --out=dist --overwrite --ignore=packaged --ignore=node_modules/.vite --ignore=.git --ignore=readme --icon=src/icon.ico --app-name=random-timer",
+    "pack": "npm run build && npx @electron/packager . --platform=win32 --arch=x64 --out=dist --overwrite --ignore=packaged --ignore=node_modules/.vite --ignore=.git --ignore=readme --icon=node/icon.ico --app-name=random-timer",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

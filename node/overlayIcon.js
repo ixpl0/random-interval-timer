@@ -1,4 +1,14 @@
 const { createCanvas } = require('canvas');
+const { 
+  CANVAS_SIZE, 
+  BORDER_RADIUS, 
+  DIGIT_WIDTH, 
+  SPACING, 
+  LINE_HEIGHT, 
+  LINE_GAP, 
+  BACKGROUND_COLOR, 
+  TEXT_COLOR 
+} = require('./constants');
 
 const createSegment = (x, y, width, height) => (ctx, baseX, baseY, color) => {
   ctx.fillStyle = color;
@@ -27,18 +37,6 @@ const DIGIT_SEGMENTS = [
   ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
   ['A', 'B', 'C', 'D', 'F', 'G'],
 ];
-
-const CONSTANTS = {
-  CANVAS_SIZE: 32,
-  BORDER_RADIUS: 8,
-  DIGIT_WIDTH: 6,
-  SPACING: 2,
-  LINE_HEIGHT: 10,
-  COLON_WIDTH: 2,
-  LINE_GAP: 2,
-  BACKGROUND_COLOR: '#e74c3c',
-  TEXT_COLOR: 'white',
-};
 
 const drawRoundedBackground = (ctx, width, height, radius, color) => {
   ctx.clearRect(0, 0, width, height);
@@ -75,19 +73,18 @@ const drawDigit = (ctx, digit, x, y, color) => {
 };
 
 const drawTime = (ctx, line1, line2, width, height) => {
-  const lineWidth = 2 * CONSTANTS.DIGIT_WIDTH + CONSTANTS.SPACING;
+  const lineWidth = 2 * DIGIT_WIDTH + SPACING;
   const startX = Math.floor((width - lineWidth) / 2);
-  const firstLineY = Math.floor((height - 2 * CONSTANTS.LINE_HEIGHT - CONSTANTS.LINE_GAP) / 2);
-  const secondLineY = firstLineY + CONSTANTS.LINE_HEIGHT + CONSTANTS.LINE_GAP;
+  const firstLineY = Math.floor((height - 2 * LINE_HEIGHT - LINE_GAP) / 2);
+  const secondLineY = firstLineY + LINE_HEIGHT + LINE_GAP;
 
-  drawDigit(ctx, line1[0], startX, firstLineY, CONSTANTS.TEXT_COLOR);
-  drawDigit(ctx, line1[1], startX + CONSTANTS.DIGIT_WIDTH + CONSTANTS.SPACING, firstLineY, CONSTANTS.TEXT_COLOR);
-  drawDigit(ctx, line2[0], startX, secondLineY, CONSTANTS.TEXT_COLOR);
-  drawDigit(ctx, line2[1], startX + CONSTANTS.DIGIT_WIDTH + CONSTANTS.SPACING, secondLineY, CONSTANTS.TEXT_COLOR);
+  drawDigit(ctx, line1[0], startX, firstLineY, TEXT_COLOR);
+  drawDigit(ctx, line1[1], startX + DIGIT_WIDTH + SPACING, firstLineY, TEXT_COLOR);
+  drawDigit(ctx, line2[0], startX, secondLineY, TEXT_COLOR);
+  drawDigit(ctx, line2[1], startX + DIGIT_WIDTH + SPACING, secondLineY, TEXT_COLOR);
 };
 
 const createOverlayIcon = (text) => {
-  const { CANVAS_SIZE, BORDER_RADIUS, BACKGROUND_COLOR } = CONSTANTS;
   const canvas = createCanvas(CANVAS_SIZE, CANVAS_SIZE);
   const ctx = canvas.getContext('2d');
   const timeParts = text.split(':');

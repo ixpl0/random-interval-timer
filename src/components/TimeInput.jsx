@@ -1,28 +1,29 @@
 import React from 'react';
 import styled from 'styled-components';
+import { theme } from '../constants/theme';
 
 const TimeInputContainer = styled.div`
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: ${theme.sizes.gapSmall};
 `;
 
 const TimeInput = styled.input`
-  background-color: #2c3845;
-  border: 1px solid #4a5f7a;
-  border-radius: 6px;
-  color: white;
-  font-family: 'bitdust1', monospace;
-  font-size: 16px;
-  height: 24px;
-  width: 32px;
+  background-color: ${theme.colors.backgroundSecondary};
+  border: 1px solid ${theme.colors.borderPrimary};
+  border-radius: ${theme.sizes.borderRadiusSmall};
+  color: ${theme.colors.textPrimary};
+  font-family: ${theme.typography.fontFamily};
+  font-size: ${theme.typography.fontSize.small};
+  height: ${theme.sizes.inputHeight};
+  width: ${theme.sizes.inputWidth};
   text-align: center;
   user-select: auto;
   -webkit-app-region: no-drag;
 
   &:focus {
     outline: none;
-    border-color: #3498db;
+    border-color: ${theme.colors.borderFocus};
   }
 
   &::-webkit-outer-spin-button,
@@ -33,9 +34,9 @@ const TimeInput = styled.input`
 `;
 
 const MiniSeparator = styled.span`
-  color: #bdc3c7;
-  font-size: 16px;
-  font-weight: bold;
+  color: ${theme.colors.textSecondary};
+  font-size: ${theme.typography.fontSize.small};
+  font-weight: ${theme.typography.fontWeight.bold};
   height: 20px;
 `;
 

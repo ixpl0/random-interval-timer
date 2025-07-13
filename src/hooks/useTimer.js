@@ -1,7 +1,8 @@
 import { useCallback, useRef, useState } from 'react';
-import { playBeep } from '../sound.js';
-
-const MAIN_BUTTON_TEXT = 'GO!';
+import { COUNTDOWN_NUMBERS, MAIN_BUTTON_TEXT } from '../constants';
+import { convertToSeconds, formatTime, getRandomInt } from '../utils/timeUtils';
+import { createAccurateTimer } from '../utils/timerUtils';
+import { playBeep } from '../utils/audioUtils';
 
 export const useTimer = (settings) => {
   const [isRunning, setIsRunning] = useState(false);
@@ -18,55 +19,16 @@ export const useTimer = (settings) => {
   }, []);
 
   const getRandomInterval = useCallback(() => {
-    const minSeconds = settings.minHours * 3600 + settings.minMinutes * 60 + settings.minSeconds;
-    const maxSeconds = settings.maxHours * 3600 + settings.maxMinutes * 60 + settings.maxSeconds;
+    const minSeconds = convertToSeconds(settings.minHours, settings.minMinutes, settings.minSeconds);
+    const maxSeconds = convertToSeconds(settings.maxHours, settings.maxMinutes, settings.maxSeconds);
 
-    return Math.floor(minSeconds + Math.random() * (maxSeconds - minSeconds + 1));
+    return getRandomInt(minSeconds, maxSeconds);
   }, [settings.minHours, settings.minMinutes, settings.minSeconds, settings.maxHours, settings.maxMinutes, settings.maxSeconds]);
-
-  const formatTime = useCallback((seconds) => {
-    const h = Math.floor(seconds / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    const s = seconds % 60;
-
-    if (h > 0) {
-      return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-    } else {
-      return `${m}:${String(s).padStart(2, '0')}`;
-    }
-  }, []);
 
   const playBeepWithOutline = useCallback(async () => {
     setIsBeeping(true);
     await playBeep();
     setIsBeeping(false);
-  }, []);
-
-  const startAccurateTimer = useCallback((callback) => {
-    const start = Date.now();
-    let stopped = false;
-    let count = 0;
-
-    const tick = () => {
-      if (stopped) {
-        return;
-      }
-
-      count += 1;
-      callback();
-
-      const expected = start + count * 1000;
-      const drift = Date.now() - expected;
-
-      setTimeout(tick, Math.max(0, 1000 - drift));
-    };
-
-    const timeoutId = setTimeout(tick, 1000);
-
-    return () => {
-      stopped = true;
-      clearTimeout(timeoutId);
-    };
   }, []);
 
   const tick = useCallback(async () => {
@@ -83,7 +45,7 @@ export const useTimer = (settings) => {
       updateOverlay(formatTime(newRemaining));
       setMainButtonText(formatTime(newRemaining));
     }
-  }, [formatTime, getRandomInterval, playBeepWithOutline, updateOverlay]);
+  }, [getRandomInterval, playBeepWithOutline, updateOverlay]);
 
   const stop = useCallback(() => {
     if (timerStopperRef.current) {
@@ -102,31 +64,39 @@ export const useTimer = (settings) => {
 
   const start = useCallback(async () => {
     if (isRunning || isCountingDown) {
-      stop();
       return;
     }
 
-    setIsRunning(true);
     setIsCountingDown(true);
 
-    for (let i = 3; i > 0; i--) {
-      setMainButtonText(String(i));
-      await playBeepWithOutline();
-      await new Promise((resolve) => {
-        const timeoutId = setTimeout(resolve, 1000);
-        countdownTimeoutsRef.current.push(timeoutId);
-      });
+    for (let i = 0; i < COUNTDOWN_NUMBERS.length; i++) {
+      const number = COUNTDOWN_NUMBERS[i];
+
+      setMainButtonText(String(number));
+      updateOverlay(String(number));
+
+      const timeoutId = setTimeout(playBeepWithOutline, 0);
+      countdownTimeoutsRef.current.push(timeoutId);
+
+      if (i < COUNTDOWN_NUMBERS.length - 1) {
+        await new Promise((resolve) => {
+          const timeoutId = setTimeout(resolve, 1000);
+          countdownTimeoutsRef.current.push(timeoutId);
+        });
+      }
     }
 
     setIsCountingDown(false);
+    setIsRunning(true);
 
     const newInterval = getRandomInterval();
     remainingRef.current = newInterval;
-    setMainButtonText(formatTime(newInterval));
-    updateOverlay(formatTime(newInterval));
 
-    timerStopperRef.current = startAccurateTimer(tick);
-  }, [isRunning, isCountingDown, stop, playBeepWithOutline, getRandomInterval, formatTime, updateOverlay, startAccurateTimer, tick]);
+    updateOverlay(formatTime(newInterval));
+    setMainButtonText(formatTime(newInterval));
+
+    timerStopperRef.current = createAccurateTimer(tick);
+  }, [isRunning, isCountingDown, updateOverlay, playBeepWithOutline, getRandomInterval, tick]);
 
   const toggleTimer = useCallback(() => {
     if (isRunning || isCountingDown) {
@@ -134,12 +104,15 @@ export const useTimer = (settings) => {
     } else {
       start();
     }
-  }, [isRunning, isCountingDown, stop, start]);
+  }, [isRunning, isCountingDown, start, stop]);
 
   return {
     isRunning,
+    isCountingDown,
     mainButtonText,
     isBeeping,
+    start,
+    stop,
     toggleTimer,
   };
 };
