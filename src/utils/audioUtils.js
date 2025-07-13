@@ -24,11 +24,13 @@ export const playBeep = () => new Promise((resolve) => {
 
       if (audioContext.state !== 'running') {
         resolve();
+
         return;
       }
     }
 
     const oscillator = audioContext.createOscillator();
+
     oscillator.type = 'square';
     oscillator.frequency.setValueAtTime(BEEP_FREQUENCY, audioContext.currentTime);
 
@@ -47,6 +49,6 @@ export const playBeep = () => new Promise((resolve) => {
     oscillator.stop(audioContext.currentTime + BEEP_DURATION);
     oscillator.onended = () => resolve();
   } catch (error) {
-    resolve();
+    resolve(error);
   }
 });

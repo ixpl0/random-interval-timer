@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { theme } from '../constants/theme';
 
@@ -41,13 +40,13 @@ const MiniSeparator = styled.span`
 `;
 
 export const TimeInputComponent = ({
-                                     hours,
-                                     minutes,
-                                     seconds,
-                                     onHoursChange,
-                                     onMinutesChange,
-                                     onSecondsChange,
-                                   }) => {
+  hours,
+  minutes,
+  seconds,
+  onHoursChange,
+  onMinutesChange,
+  onSecondsChange,
+}) => {
   return (
     <TimeInputContainer>
       <TimeInput

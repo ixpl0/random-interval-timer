@@ -1,4 +1,3 @@
-import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { theme } from '../constants/theme';
 
@@ -67,11 +66,11 @@ const CloseButton = styled(HeaderButton)`
 `;
 
 export const Header = ({
-                         isSettingsVisible,
-                         showSettings,
-                         hideSettings,
-                         applySettings,
-                       }) => {
+  isSettingsVisible,
+  showSettings,
+  hideSettings,
+  applySettings,
+}) => {
   const handleSettingsClick = () => {
     if (isSettingsVisible) {
       applySettings();

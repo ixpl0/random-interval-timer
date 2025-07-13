@@ -1,4 +1,3 @@
-import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { theme } from '../constants/theme';
 
@@ -37,7 +36,7 @@ const MainButtonContainer = styled.button`
     animation: ${fadeBoxShadow} ${theme.animations.transition.medium} forwards;
   }
 
-  ${props => props.$isActiveTimer && `
+  ${(props) => props.$isActiveTimer && `
     background-color: ${theme.colors.danger};
     
     &:hover {
@@ -45,17 +44,17 @@ const MainButtonContainer = styled.button`
     }
   `}
 
-  ${props => props.$isBeeping && `
+  ${(props) => props.$isBeeping && `
     outline: 2px solid ${theme.colors.danger};
   `}
 `;
 
 export const MainButton = ({
-                             isRunning,
-                             isBeeping,
-                             mainButtonText,
-                             onClick,
-                           }) => {
+  isRunning,
+  isBeeping,
+  mainButtonText,
+  onClick,
+}) => {
   return (
     <MainButtonContainer
       $isActiveTimer={isRunning}

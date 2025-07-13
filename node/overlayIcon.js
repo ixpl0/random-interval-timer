@@ -1,13 +1,13 @@
 const { createCanvas } = require('canvas');
-const { 
-  CANVAS_SIZE, 
-  BORDER_RADIUS, 
-  DIGIT_WIDTH, 
-  SPACING, 
-  LINE_HEIGHT, 
-  LINE_GAP, 
-  BACKGROUND_COLOR, 
-  TEXT_COLOR 
+const {
+  CANVAS_SIZE,
+  BORDER_RADIUS,
+  DIGIT_WIDTH,
+  SPACING,
+  LINE_HEIGHT,
+  LINE_GAP,
+  BACKGROUND_COLOR,
+  TEXT_COLOR,
 } = require('./constants');
 
 const createSegment = (x, y, width, height) => (ctx, baseX, baseY, color) => {
@@ -92,13 +92,15 @@ const createOverlayIcon = (text) => {
   drawRoundedBackground(ctx, CANVAS_SIZE, CANVAS_SIZE, BORDER_RADIUS, BACKGROUND_COLOR);
 
   if (timeParts.length === 3) {
-    const hours = String(parseInt(timeParts[0], 10)).padStart(2, '0');
+    const hours = String(parseInt(timeParts[0], 10))
+      .padStart(2, '0');
 
     drawTime(ctx, hours, timeParts[1], CANVAS_SIZE, CANVAS_SIZE);
   } else {
     const minutes = parseInt(timeParts[0], 10);
     const seconds = timeParts[1] || '00';
-    const minutesText = String(minutes).padStart(2, '0');
+    const minutesText = String(minutes)
+      .padStart(2, '0');
     const secondsText = seconds.padStart(2, '0');
 
     drawTime(ctx, minutesText, secondsText, CANVAS_SIZE, CANVAS_SIZE);

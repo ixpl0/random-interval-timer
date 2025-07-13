@@ -1,6 +1,10 @@
-import { useCallback, useRef, useState } from 'react';
+import {
+  useCallback, useRef, useState,
+} from 'react';
 import { COUNTDOWN_NUMBERS, MAIN_BUTTON_TEXT } from '../constants';
-import { convertToSeconds, formatTime, getRandomInt } from '../utils/timeUtils';
+import {
+  convertToSeconds, formatTime, getRandomInt,
+} from '../utils/timeUtils';
 import { createAccurateTimer } from '../utils/timerUtils';
 import { playBeep } from '../utils/audioUtils';
 
@@ -38,6 +42,7 @@ export const useTimer = (settings) => {
     if (newRemaining <= 0) {
       playBeepWithOutline();
       const newInterval = getRandomInterval();
+
       remainingRef.current = newInterval;
       updateOverlay(formatTime(newInterval));
       setMainButtonText(formatTime(newInterval));
@@ -76,11 +81,13 @@ export const useTimer = (settings) => {
       updateOverlay(String(number));
 
       const timeoutId = setTimeout(playBeepWithOutline, 0);
+
       countdownTimeoutsRef.current.push(timeoutId);
 
       if (i < COUNTDOWN_NUMBERS.length - 1) {
         await new Promise((resolve) => {
           const timeoutId = setTimeout(resolve, 1000);
+
           countdownTimeoutsRef.current.push(timeoutId);
         });
       }
@@ -90,6 +97,7 @@ export const useTimer = (settings) => {
     setIsRunning(true);
 
     const newInterval = getRandomInterval();
+
     remainingRef.current = newInterval;
 
     updateOverlay(formatTime(newInterval));

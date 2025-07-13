@@ -1,5 +1,7 @@
 import { useCallback, useState } from 'react';
-import { DEFAULT_SETTINGS, MAX_HOURS, MAX_MINUTES, MAX_SECONDS } from '../constants';
+import {
+  DEFAULT_SETTINGS, MAX_HOURS, MAX_MINUTES, MAX_SECONDS,
+} from '../constants';
 import { validateTimeValue } from '../utils/timeUtils';
 
 export const useSettings = () => {
@@ -22,8 +24,8 @@ export const useSettings = () => {
   }, [tempSettings]);
 
   const updateTempSetting = useCallback((key, value) => {
-    const maxValue = key.includes('Hours') ? MAX_HOURS :
-      key.includes('Minutes') ? MAX_MINUTES : MAX_SECONDS;
+    const maxValue = key.includes('Hours') ? MAX_HOURS
+      : key.includes('Minutes') ? MAX_MINUTES : MAX_SECONDS;
 
     setTempSettings((prev) => ({
       ...prev,

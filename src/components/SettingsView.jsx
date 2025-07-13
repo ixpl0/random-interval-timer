@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { theme } from '../constants/theme';
 import { TimeInputComponent } from './TimeInput';
@@ -22,9 +21,9 @@ const SettingsLabel = styled.div`
 `;
 
 export const SettingsView = ({
-                               tempSettings,
-                               updateTempSetting,
-                             }) => {
+  tempSettings,
+  updateTempSetting,
+}) => {
   return (
     <SettingsContainer>
       <SettingsRow>

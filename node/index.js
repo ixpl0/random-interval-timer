@@ -1,4 +1,6 @@
-const { app, BrowserWindow, powerSaveBlocker, ipcMain, nativeImage } = require('electron');
+const {
+  app, BrowserWindow, powerSaveBlocker, ipcMain, nativeImage,
+} = require('electron');
 const path = require('path');
 const { createOverlayIcon } = require('./overlayIcon');
 
@@ -37,8 +39,9 @@ ipcMain.on('update-timer-overlay', (event, timeText) => {
     const icon = nativeImage.createFromBuffer(buffer);
 
     mainWindow.setIcon(icon);
-  } catch (e) {
+  } catch (error) {
     mainWindow.setIcon(path.join(__dirname, 'icon.ico'));
+    console.error(error);
   }
 });
 
@@ -74,6 +77,7 @@ const createWindow = () => {
   });
 
   const isDev = process.argv.includes('--dev');
+
   if (isDev) {
     mainWindow.loadURL('http://localhost:3000');
   } else {
@@ -84,6 +88,7 @@ const createWindow = () => {
 
   mainWindow.on('closed', () => {
     mainWindow = null;
+
     if (powerSaveBlocker.isStarted(powerSaveId)) {
       powerSaveBlocker.stop(powerSaveId);
     }
@@ -127,4 +132,5 @@ app.on('child-process-gone', (event, details) => {
   process.exit(1);
 });
 
-app.whenReady().then(createWindow);
+app.whenReady()
+  .then(createWindow);
