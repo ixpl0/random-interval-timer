@@ -1,11 +1,19 @@
 const {
-  app, BrowserWindow, powerSaveBlocker, ipcMain, nativeImage,
+  app,
+  BrowserWindow,
+  powerSaveBlocker,
+  ipcMain,
+  nativeImage,
 } = require('electron');
 const path = require('path');
 const { createOverlayIcon } = require('./overlayIcon');
 
 let mainWindow;
 let powerSaveId;
+
+const ICON_PATH = app.isPackaged
+  ? path.join(path.dirname(process.execPath), 'resources', 'app', 'node', 'icon.ico')
+  : path.join(__dirname, 'icon.ico');
 
 process.on('uncaughtException', (err) => {
   console.error(err);
@@ -29,8 +37,7 @@ ipcMain.on('update-timer-overlay', (event, timeText) => {
   }
 
   if (!timeText) {
-    mainWindow.setIcon(path.join(__dirname, 'icon.ico'));
-
+    mainWindow.setIcon(ICON_PATH);
     return;
   }
 
@@ -38,10 +45,15 @@ ipcMain.on('update-timer-overlay', (event, timeText) => {
     const buffer = createOverlayIcon(timeText);
     const icon = nativeImage.createFromBuffer(buffer);
 
-    mainWindow.setIcon(icon);
+    if (!icon.isEmpty()) {
+      mainWindow.setIcon(icon);
+    } else {
+      console.warn('Created icon is empty, falling back to default');
+      mainWindow.setIcon(ICON_PATH);
+    }
   } catch (error) {
-    mainWindow.setIcon(path.join(__dirname, 'icon.ico'));
-    console.error(error);
+    console.error('Error creating overlay icon:', error);
+    mainWindow.setIcon(ICON_PATH);
   }
 });
 
@@ -57,7 +69,7 @@ ipcMain.on('minimize-window', () => {
 });
 
 const createWindow = () => {
-  mainWindow = new BrowserWindow({
+  const windowOptions = {
     width: 170,
     height: 90,
     webPreferences: {
@@ -73,8 +85,10 @@ const createWindow = () => {
     autoHideMenuBar: true,
     frame: false,
     transparent: true,
-    icon: path.join(__dirname, 'icon.ico'),
-  });
+  };
+
+  windowOptions.icon = ICON_PATH;
+  mainWindow = new BrowserWindow(windowOptions);
 
   const isDev = process.argv.includes('--dev');
 
@@ -133,4 +147,7 @@ app.on('child-process-gone', (event, details) => {
 });
 
 app.whenReady()
-  .then(createWindow);
+  .then(() => {
+    app.setAppUserModelId('ixpl0.random-interval-timer');
+    createWindow();
+  });
