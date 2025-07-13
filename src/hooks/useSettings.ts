@@ -1,13 +1,14 @@
 import { useCallback, useState } from 'react';
 import {
   DEFAULT_SETTINGS, MAX_HOURS, MAX_MINUTES, MAX_SECONDS,
-} from '../constants';
-import { validateTimeValue } from '../utils/timeUtils';
+} from '@/constants';
+import { validateTimeValue } from '@/utils/timeUtils';
+import type { Settings, UseSettingsReturn } from '@/types';
 
-export const useSettings = () => {
-  const [isSettingsVisible, setIsSettingsVisible] = useState(false);
-  const [settings, setSettings] = useState(DEFAULT_SETTINGS);
-  const [tempSettings, setTempSettings] = useState(settings);
+export const useSettings = (): UseSettingsReturn => {
+  const [isSettingsVisible, setIsSettingsVisible] = useState<boolean>(false);
+  const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
+  const [tempSettings, setTempSettings] = useState<Settings>(settings);
 
   const showSettings = useCallback(() => {
     setTempSettings({ ...settings });
@@ -23,7 +24,7 @@ export const useSettings = () => {
     setIsSettingsVisible(false);
   }, [tempSettings]);
 
-  const updateTempSetting = useCallback((key, value) => {
+  const updateTempSetting = useCallback((key: keyof Settings, value: number) => {
     const maxValue = key.includes('Hours') ? MAX_HOURS
       : key.includes('Minutes') ? MAX_MINUTES : MAX_SECONDS;
 
@@ -34,12 +35,12 @@ export const useSettings = () => {
   }, []);
 
   return {
-    isSettingsVisible,
     settings,
     tempSettings,
+    isSettingsVisible,
     showSettings,
-    hideSettings,
     applySettings,
+    hideSettings,
     updateTempSetting,
   };
 };

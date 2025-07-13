@@ -1,13 +1,13 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { theme } from './constants/theme';
-import { useTimer } from './hooks/useTimer';
-import { useSettings } from './hooks/useSettings';
-import { initAudio } from './utils/audioUtils';
-import { Header } from './components/Header';
-import { MainButton } from './components/MainButton';
-import { SettingsView } from './components/SettingsView';
-import './index.css';
+import { theme } from '@/constants/theme';
+import { useSettings } from '@/hooks/useSettings';
+import { useTimer } from '@/hooks/useTimer';
+import { initAudio } from '@/utils/audioUtils';
+import { Header } from '@/components/Header';
+import { MainButton } from '@/components/MainButton';
+import { SettingsView } from '@/components/SettingsView';
+import '@/index.css';
 
 const PageWrapper = styled.div`
   width: 100%;
@@ -29,21 +29,21 @@ const Main = styled.main`
   justify-content: center;
 `;
 
-function App() {
+export const App: React.FC = () => {
   const {
-    isSettingsVisible,
     settings,
     tempSettings,
+    isSettingsVisible,
     showSettings,
-    hideSettings,
     applySettings,
+    hideSettings,
     updateTempSetting,
   } = useSettings();
 
   const {
     isRunning,
-    mainButtonText,
     isBeeping,
+    mainButtonText,
     toggleTimer,
   } = useTimer(settings);
 
@@ -60,7 +60,13 @@ function App() {
         applySettings={applySettings}
       />
       <Main>
-        {!isSettingsVisible && (
+        {isSettingsVisible ? (
+          <SettingsView
+            isVisible={isSettingsVisible}
+            tempSettings={tempSettings}
+            updateTempSetting={updateTempSetting}
+          />
+        ) : (
           <MainButton
             isRunning={isRunning}
             isBeeping={isBeeping}
@@ -68,16 +74,9 @@ function App() {
             onClick={toggleTimer}
           />
         )}
-        {isSettingsVisible && (
-          <SettingsView
-            isVisible={isSettingsVisible}
-            tempSettings={tempSettings}
-            updateTempSetting={updateTempSetting}
-          />
-        )}
       </Main>
     </PageWrapper>
   );
-}
+};
 
 export default App;

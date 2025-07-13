@@ -1,11 +1,9 @@
-export {};
+import { ElectronAPI } from '@/types';
 
 declare global {
   interface Window {
-    electronAPI: {
-      updateOverlay: (timeText: string) => void
-      close: () => void
-      minimize: () => void
-    };
+    electronAPI: ElectronAPI;
   }
 }
+
+export {};

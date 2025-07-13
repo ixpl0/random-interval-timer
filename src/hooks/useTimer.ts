@@ -1,41 +1,46 @@
 import {
   useCallback, useRef, useState,
 } from 'react';
-import { COUNTDOWN_NUMBERS, MAIN_BUTTON_TEXT } from '../constants';
+import {
+  COUNTDOWN_NUMBERS, MAIN_BUTTON_TEXT, MILLISECONDS_PER_SECOND,
+} from '@/constants';
 import {
   convertToSeconds, formatTime, getRandomInt,
-} from '../utils/timeUtils';
-import { createAccurateTimer } from '../utils/timerUtils';
-import { playBeep } from '../utils/audioUtils';
+} from '@/utils/timeUtils';
+import { createAccurateTimer } from '@/utils/timerUtils';
+import { playBeep } from '@/utils/audioUtils';
+import type {
+  Settings, UseTimerReturn, Timeout,
+} from '@/types';
 
-export const useTimer = (settings) => {
-  const [isRunning, setIsRunning] = useState(false);
-  const [isCountingDown, setIsCountingDown] = useState(false);
-  const [mainButtonText, setMainButtonText] = useState(MAIN_BUTTON_TEXT);
-  const [isBeeping, setIsBeeping] = useState(false);
+export const useTimer = (settings: Settings): UseTimerReturn => {
+  const [isRunning, setIsRunning] = useState<boolean>(false);
+  const [isCountingDown, setIsCountingDown] = useState<boolean>(false);
+  const [mainButtonText, setMainButtonText] = useState<string>(MAIN_BUTTON_TEXT);
+  const [isBeeping, setIsBeeping] = useState<boolean>(false);
 
-  const timerStopperRef = useRef(null);
-  const countdownTimeoutsRef = useRef([]);
-  const remainingRef = useRef(0);
+  const timerStopperRef = useRef<(() => void) | null>(null);
+  const countdownTimeoutsRef = useRef<Timeout[]>([]);
+  const remainingRef = useRef<number>(0);
 
-  const updateOverlay = useCallback((text) => {
-    window.electronAPI?.updateOverlay?.(text);
+  const updateOverlay = useCallback((text: string) => {
+    window.electronAPI?.setOverlayIcon?.(text);
   }, []);
 
-  const getRandomInterval = useCallback(() => {
+  const getRandomInterval = useCallback((): number => {
     const minSeconds = convertToSeconds(settings.minHours, settings.minMinutes, settings.minSeconds);
     const maxSeconds = convertToSeconds(settings.maxHours, settings.maxMinutes, settings.maxSeconds);
 
     return getRandomInt(minSeconds, maxSeconds);
   }, [settings.minHours, settings.minMinutes, settings.minSeconds, settings.maxHours, settings.maxMinutes, settings.maxSeconds]);
 
-  const playBeepWithOutline = useCallback(async () => {
+  const playBeepWithOutline = useCallback(async (): Promise<void> => {
     setIsBeeping(true);
     await playBeep();
     setIsBeeping(false);
   }, []);
 
-  const tick = useCallback(async () => {
+  const tick = useCallback(async (): Promise<void> => {
     remainingRef.current = remainingRef.current - 1;
     const newRemaining = remainingRef.current;
 
@@ -52,7 +57,7 @@ export const useTimer = (settings) => {
     }
   }, [getRandomInterval, playBeepWithOutline, updateOverlay]);
 
-  const stop = useCallback(() => {
+  const stop = useCallback((): void => {
     if (timerStopperRef.current) {
       timerStopperRef.current();
       timerStopperRef.current = null;
@@ -67,30 +72,25 @@ export const useTimer = (settings) => {
     updateOverlay('');
   }, [updateOverlay]);
 
-  const start = useCallback(async () => {
+  const start = useCallback(async (): Promise<void> => {
     if (isRunning || isCountingDown) {
       return;
     }
 
     setIsCountingDown(true);
 
-    for (let i = 0; i < COUNTDOWN_NUMBERS.length; i++) {
-      const number = COUNTDOWN_NUMBERS[i];
+    for (const number of COUNTDOWN_NUMBERS) {
+      const countdownDigit = String(number);
 
-      setMainButtonText(String(number));
-      updateOverlay(String(number));
+      setMainButtonText(countdownDigit);
+      updateOverlay(countdownDigit);
+      playBeepWithOutline();
 
-      const timeoutId = setTimeout(playBeepWithOutline, 0);
+      await new Promise<void>((resolve) => {
+        const timeoutId = setTimeout(resolve, MILLISECONDS_PER_SECOND);
 
-      countdownTimeoutsRef.current.push(timeoutId);
-
-      if (i < COUNTDOWN_NUMBERS.length - 1) {
-        await new Promise((resolve) => {
-          const timeoutId = setTimeout(resolve, 1000);
-
-          countdownTimeoutsRef.current.push(timeoutId);
-        });
-      }
+        countdownTimeoutsRef.current.push(timeoutId);
+      });
     }
 
     setIsCountingDown(false);
@@ -99,28 +99,29 @@ export const useTimer = (settings) => {
     const newInterval = getRandomInterval();
 
     remainingRef.current = newInterval;
-
     updateOverlay(formatTime(newInterval));
     setMainButtonText(formatTime(newInterval));
 
-    timerStopperRef.current = createAccurateTimer(tick);
-  }, [isRunning, isCountingDown, updateOverlay, playBeepWithOutline, getRandomInterval, tick]);
+    timerStopperRef.current = createAccurateTimer(() => {
+      tick();
+    }, MILLISECONDS_PER_SECOND);
+  }, [isRunning, isCountingDown, getRandomInterval, playBeepWithOutline, updateOverlay, tick]);
 
-  const toggleTimer = useCallback(() => {
+  const toggleTimer = useCallback((): void => {
     if (isRunning || isCountingDown) {
       stop();
     } else {
       start();
     }
-  }, [isRunning, isCountingDown, start, stop]);
+  }, [isRunning, isCountingDown, stop, start]);
 
   return {
     isRunning,
     isCountingDown,
-    mainButtonText,
+    remaining: remainingRef.current,
     isBeeping,
-    start,
-    stop,
+    mainButtonText,
     toggleTimer,
+    stop,
   };
 };

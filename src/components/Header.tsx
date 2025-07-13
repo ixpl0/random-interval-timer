@@ -1,5 +1,7 @@
+import React from 'react';
 import styled, { keyframes } from 'styled-components';
-import { theme } from '../constants/theme';
+import { theme } from '@/constants/theme';
+import type { HeaderProps } from '@/types';
 
 const fadeBoxShadow = keyframes`
   from {
@@ -65,13 +67,13 @@ const CloseButton = styled(HeaderButton)`
   }
 `;
 
-export const Header = ({
+export const Header: React.FC<HeaderProps> = ({
   isSettingsVisible,
   showSettings,
   hideSettings,
   applySettings,
 }) => {
-  const handleSettingsClick = () => {
+  const handleSettingsClick = (): void => {
     if (isSettingsVisible) {
       applySettings();
     } else {
@@ -79,7 +81,7 @@ export const Header = ({
     }
   };
 
-  const handleCloseClick = () => {
+  const handleCloseClick = (): void => {
     if (isSettingsVisible) {
       hideSettings();
     } else {
@@ -87,7 +89,7 @@ export const Header = ({
     }
   };
 
-  const handleMinimizeClick = () => {
+  const handleMinimizeClick = (): void => {
     window.electronAPI?.minimize();
   };
 

@@ -1,5 +1,7 @@
+import React from 'react';
 import styled, { keyframes } from 'styled-components';
-import { theme } from '../constants/theme';
+import { theme } from '@/constants/theme';
+import type { MainButtonProps } from '@/types';
 
 const fadeBoxShadow = keyframes`
   from {
@@ -10,7 +12,12 @@ const fadeBoxShadow = keyframes`
   }
 `;
 
-const MainButtonContainer = styled.button`
+interface StyledMainButtonProps {
+  $isActiveTimer: boolean;
+  $isBeeping: boolean;
+}
+
+const StyledMainButton = styled.button<StyledMainButtonProps>`
   width: 100%;
   height: 100%;
   border: none;
@@ -38,30 +45,30 @@ const MainButtonContainer = styled.button`
 
   ${(props) => props.$isActiveTimer && `
     background-color: ${theme.colors.danger};
-    
+
     &:hover {
       background-color: ${theme.colors.dangerHover};
     }
   `}
 
   ${(props) => props.$isBeeping && `
-    outline: 2px solid ${theme.colors.danger};
+    outline: 3px solid ${theme.colors.danger};
   `}
 `;
 
-export const MainButton = ({
+export const MainButton: React.FC<MainButtonProps> = ({
   isRunning,
   isBeeping,
   mainButtonText,
   onClick,
 }) => {
   return (
-    <MainButtonContainer
+    <StyledMainButton
       $isActiveTimer={isRunning}
       $isBeeping={isBeeping}
       onClick={onClick}
     >
       {mainButtonText}
-    </MainButtonContainer>
+    </StyledMainButton>
   );
 };

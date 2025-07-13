@@ -1,5 +1,7 @@
+import React from 'react';
 import styled from 'styled-components';
-import { theme } from '../constants/theme';
+import { theme } from '@/constants/theme';
+import type { TimeInputProps } from '@/types';
 
 const TimeInputContainer = styled.div`
   display: flex;
@@ -7,7 +9,7 @@ const TimeInputContainer = styled.div`
   gap: ${theme.sizes.gapSmall};
 `;
 
-const TimeInput = styled.input`
+const TimeInputField = styled.input`
   background-color: ${theme.colors.backgroundSecondary};
   border: 1px solid ${theme.colors.borderPrimary};
   border-radius: ${theme.sizes.borderRadiusSmall};
@@ -32,14 +34,14 @@ const TimeInput = styled.input`
   }
 `;
 
-const MiniSeparator = styled.span`
+const TimeSeparator = styled.span`
   color: ${theme.colors.textSecondary};
   font-size: ${theme.typography.fontSize.small};
   font-weight: ${theme.typography.fontWeight.bold};
   height: 20px;
 `;
 
-export const TimeInputComponent = ({
+export const TimeInput: React.FC<TimeInputProps> = ({
   hours,
   minutes,
   seconds,
@@ -47,28 +49,40 @@ export const TimeInputComponent = ({
   onMinutesChange,
   onSecondsChange,
 }) => {
+  const handleHoursChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    onHoursChange(parseInt(e.target.value) || 0);
+  };
+
+  const handleMinutesChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    onMinutesChange(parseInt(e.target.value) || 0);
+  };
+
+  const handleSecondsChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    onSecondsChange(parseInt(e.target.value) || 0);
+  };
+
   return (
     <TimeInputContainer>
-      <TimeInput
+      <TimeInputField
         type="number"
         value={hours}
-        onChange={(e) => onHoursChange(Number(e.target.value))}
+        onChange={handleHoursChange}
         min="0"
         max="99"
       />
-      <MiniSeparator>:</MiniSeparator>
-      <TimeInput
+      <TimeSeparator>:</TimeSeparator>
+      <TimeInputField
         type="number"
         value={minutes}
-        onChange={(e) => onMinutesChange(Number(e.target.value))}
+        onChange={handleMinutesChange}
         min="0"
         max="59"
       />
-      <MiniSeparator>:</MiniSeparator>
-      <TimeInput
+      <TimeSeparator>:</TimeSeparator>
+      <TimeInputField
         type="number"
         value={seconds}
-        onChange={(e) => onSecondsChange(Number(e.target.value))}
+        onChange={handleSecondsChange}
         min="0"
         max="59"
       />
