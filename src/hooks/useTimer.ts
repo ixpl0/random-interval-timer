@@ -9,6 +9,7 @@ import {
 } from '@/utils/timeUtils';
 import { createAccurateTimer } from '@/utils/timerUtils';
 import { playBeep } from '@/utils/audioUtils';
+import { setOverlayIcon } from '@/utils/electronUtils.ts';
 import type {
   Settings, UseTimerReturn, Timeout,
 } from '@/types';
@@ -24,7 +25,7 @@ export const useTimer = (settings: Settings): UseTimerReturn => {
   const remainingRef = useRef<number>(0);
 
   const updateOverlay = useCallback((text: string) => {
-    window.electronAPI?.setOverlayIcon?.(text);
+    setOverlayIcon(text);
   }, []);
 
   const getRandomInterval = useCallback((): number => {

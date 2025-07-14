@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import {
   DEFAULT_SETTINGS, MAX_HOURS, MAX_MINUTES, MAX_SECONDS,
 } from '@/constants';
-import { validateTimeValue } from '@/utils/timeUtils';
+import { convertToSeconds, validateTimeValue } from '@/utils/timeUtils';
 import type { Settings, UseSettingsReturn } from '@/types';
 
 export const useSettings = (): UseSettingsReturn => {
@@ -20,6 +20,22 @@ export const useSettings = (): UseSettingsReturn => {
   }, []);
 
   const applySettings = useCallback(() => {
+    const {
+      maxSeconds,
+      maxHours,
+      minMinutes,
+      maxMinutes,
+      minHours,
+      minSeconds,
+    } = tempSettings;
+
+    const minTimerInSeconds = convertToSeconds(minHours, minMinutes, minSeconds);
+    const maxTimerInSeconds = convertToSeconds(maxHours, maxMinutes, maxSeconds);
+
+    if (!minTimerInSeconds || !maxTimerInSeconds || minTimerInSeconds > maxTimerInSeconds) {
+      return;
+    }
+
     setSettings({ ...tempSettings });
     setIsSettingsVisible(false);
   }, [tempSettings]);

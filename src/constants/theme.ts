@@ -1,22 +1,4 @@
-export const colors = {
-  primary: '#3498db',
-  primaryHover: '#2980b9',
-  danger: '#e74c3c',
-  dangerHover: '#c0392b',
-  success: '#27ae60',
-  successHover: '#219150',
-  warning: '#f1c40f',
-  warningHover: '#bfa100',
-
-  background: '#2c3e50',
-  backgroundSecondary: '#2c3845',
-
-  textPrimary: '#fff',
-  textSecondary: '#bdc3c7',
-
-  borderPrimary: '#4a5f7a',
-  borderFocus: '#3498db',
-};
+import colors from '../shared/colors.json';
 
 export const sizes = {
   paddingSmall: '2px',

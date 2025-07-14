@@ -1,6 +1,7 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { theme } from '@/constants/theme';
+import { closeWindow, minimizeWindow } from '@/utils/electronUtils.ts';
 import type { HeaderProps } from '@/types';
 
 const fadeBoxShadow = keyframes`
@@ -85,12 +86,12 @@ export const Header: React.FC<HeaderProps> = ({
     if (isSettingsVisible) {
       hideSettings();
     } else {
-      window.electronAPI?.close();
+      closeWindow();
     }
   };
 
   const handleMinimizeClick = (): void => {
-    window.electronAPI?.minimize();
+    minimizeWindow();
   };
 
   const settingsButtonTitle = isSettingsVisible ? 'Apply' : 'Settings';

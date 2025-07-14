@@ -1,3 +1,5 @@
+const colors = require('../src/shared/colors.json');
+
 module.exports = {
   CANVAS_SIZE: 32,
   BORDER_RADIUS: 8,
@@ -6,6 +8,6 @@ module.exports = {
   LINE_HEIGHT: 10,
   COLON_WIDTH: 2,
   LINE_GAP: 2,
-  BACKGROUND_COLOR: '#e74c3c',
-  TEXT_COLOR: 'white',
+  BACKGROUND_COLOR: colors.danger,
+  TEXT_COLOR: colors.textPrimary,
 };
