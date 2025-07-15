@@ -8,9 +8,7 @@ import {
 let audioContext: AudioContext | null = null;
 
 export const initAudio = (): void => {
-  if (!audioContext) {
-    audioContext = new window.AudioContext();
-  }
+  audioContext ||= new window.AudioContext();
 };
 
 export const playBeep = (): Promise<void> => {

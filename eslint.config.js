@@ -2,14 +2,23 @@ import js from '@eslint/js';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
-import tseslint from '@typescript-eslint/eslint-plugin';
-import tsparser from '@typescript-eslint/parser';
+import tsEslintPlugin from '@typescript-eslint/eslint-plugin';
+import tsEslintParser from '@typescript-eslint/parser';
 import stylistic from '@stylistic/eslint-plugin';
 import globals from 'globals';
 
 export default [
   {
-    ignores: ['dist-react', 'node'],
+    ignores: [
+      'dist',
+      'dist-react',
+      'node_modules',
+      'node',
+      '.idea',
+      '.vscode',
+      '*.log',
+      '.env*',
+    ],
   },
   {
     files: ['**/*.js'],
@@ -37,7 +46,7 @@ export default [
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
-      parser: tsparser,
+      parser: tsEslintParser,
       parserOptions: {
         ecmaFeatures: { jsx: true },
         project: './tsconfig.json',
@@ -54,7 +63,7 @@ export default [
       react,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
-      '@typescript-eslint': tseslint,
+      '@typescript-eslint': tsEslintPlugin,
       '@stylistic': stylistic,
     },
     rules: {
@@ -62,7 +71,7 @@ export default [
       ...react.configs.recommended.rules,
       ...react.configs['jsx-runtime'].rules,
       ...reactHooks.configs.recommended.rules,
-      ...tseslint.configs.recommended.rules,
+      ...tsEslintPlugin.configs.recommended.rules,
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
@@ -161,10 +170,24 @@ export default [
       'eol-last': ['error', 'always'],
 
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-      '@typescript-eslint/explicit-function-return-type': 'off',
-      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/explicit-function-return-type': [
+        'error',
+        {
+          allowExpressions: true,
+          allowTypedFunctionExpressions: true,
+        },
+      ],
+      '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-non-null-assertion': 'error',
       '@typescript-eslint/no-inferrable-types': 'error',
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        {
+          prefer: 'type-imports',
+          disallowTypeAnnotations: false,
+        },
+      ],
+      '@typescript-eslint/no-import-type-side-effects': 'error',
       '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
       'no-unused-vars': 'off',
 
@@ -240,6 +263,17 @@ export default [
         before: false,
         after: true,
       }],
+      'radix': ['error', 'always'],
+      'no-else-return': 'error',
+      'object-shorthand': 'error',
+      'dot-notation': 'error',
+      'logical-assignment-operators': ['error', 'always', { enforceForIfStatements: true }],
+      'no-lonely-if': 'error',
+      'no-useless-rename': 'error',
+      'require-await': 'error',
+      'sort-imports': ['error', { ignoreDeclarationSort: true }],
+      'prefer-rest-params': 'error',
+      'prefer-spread': 'error',
     },
   },
 ];

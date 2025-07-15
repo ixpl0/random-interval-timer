@@ -9,8 +9,8 @@
     "preview": "vite preview",
     "dev:vite": "vite",
     "pack": "npm run build && npx @electron/packager . --platform=win32 --arch=x64 --out=dist --overwrite --ignore=packaged --ignore=node_modules/.vite --ignore=.git --ignore=readme --icon=node/icon.ico --app-name=random-timer",
-    "lint": "eslint . --ext .js,.jsx",
-    "lint:fix": "eslint . --ext .js,.jsx --fix",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

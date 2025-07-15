@@ -50,15 +50,15 @@ export const TimeInput: React.FC<TimeInputProps> = ({
   onSecondsChange,
 }) => {
   const handleHoursChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    onHoursChange(parseInt(e.target.value) || 0);
+    onHoursChange(parseInt(e.target.value, 10) || 0);
   };
 
   const handleMinutesChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    onMinutesChange(parseInt(e.target.value) || 0);
+    onMinutesChange(parseInt(e.target.value, 10) || 0);
   };
 
   const handleSecondsChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    onSecondsChange(parseInt(e.target.value) || 0);
+    onSecondsChange(parseInt(e.target.value, 10) || 0);
   };
 
   return (

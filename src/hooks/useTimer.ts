@@ -11,7 +11,9 @@ import { createAccurateTimer } from '@/utils/timerUtils';
 import { playBeep } from '@/utils/audioUtils';
 import { setOverlayIcon } from '@/utils/electronUtils.ts';
 import type {
-  Settings, UseTimerReturn, Timeout,
+  Settings,
+  Timeout,
+  UseTimerReturn,
 } from '@/types';
 
 export const useTimer = (settings: Settings): UseTimerReturn => {
@@ -41,7 +43,7 @@ export const useTimer = (settings: Settings): UseTimerReturn => {
     setIsBeeping(false);
   }, []);
 
-  const tick = useCallback(async (): Promise<void> => {
+  const tick = useCallback((): void => {
     remainingRef.current = remainingRef.current - 1;
     const newRemaining = remainingRef.current;
 
