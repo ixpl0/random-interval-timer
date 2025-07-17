@@ -2,11 +2,13 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { theme } from '@/constants/theme';
 import { useSettings } from '@/hooks/useSettings';
+import { useSoundSettings } from '@/hooks/useSoundSettings';
 import { useTimer } from '@/hooks/useTimer';
 import { initAudio } from '@/utils/audioUtils';
 import { Header } from '@/components/Header';
 import { MainButton } from '@/components/MainButton';
 import { SettingsView } from '@/components/SettingsView';
+import { SoundSettingsView } from '@/components/SoundSettingsView';
 import '@/index.css';
 
 const PageWrapper = styled.div`
@@ -41,11 +43,21 @@ export const App: React.FC = () => {
   } = useSettings();
 
   const {
+    soundSettings,
+    tempSoundSettings,
+    isSoundSettingsVisible,
+    showSoundSettings,
+    applySoundSettings,
+    hideSoundSettings,
+    updateTempSoundSetting,
+  } = useSoundSettings();
+
+  const {
     isRunning,
     isBeeping,
     mainButtonText,
     toggleTimer,
-  } = useTimer(settings);
+  } = useTimer(settings, soundSettings);
 
   useEffect(() => {
     initAudio();
@@ -55,9 +67,13 @@ export const App: React.FC = () => {
     <PageWrapper>
       <Header
         isSettingsVisible={isSettingsVisible}
+        isSoundSettingsVisible={isSoundSettingsVisible}
         showSettings={showSettings}
         hideSettings={hideSettings}
         applySettings={applySettings}
+        showSoundSettings={showSoundSettings}
+        hideSoundSettings={hideSoundSettings}
+        applySoundSettings={applySoundSettings}
       />
       <Main>
         {isSettingsVisible ? (
@@ -65,6 +81,12 @@ export const App: React.FC = () => {
             isVisible={isSettingsVisible}
             tempSettings={tempSettings}
             updateTempSetting={updateTempSetting}
+          />
+        ) : isSoundSettingsVisible ? (
+          <SoundSettingsView
+            isVisible={isSoundSettingsVisible}
+            tempSoundSettings={tempSoundSettings}
+            updateTempSoundSetting={updateTempSoundSetting}
           />
         ) : (
           <MainButton

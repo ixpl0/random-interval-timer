@@ -8,15 +8,16 @@ import {
   convertToSeconds, formatTime, getRandomInt,
 } from '@/utils/timeUtils';
 import { createAccurateTimer } from '@/utils/timerUtils';
-import { playBeep } from '@/utils/audioUtils';
+import { playSound } from '@/utils/audioUtils';
 import { setOverlayIcon } from '@/utils/electronUtils.ts';
 import type {
   Settings,
+  SoundSettings,
   Timeout,
   UseTimerReturn,
 } from '@/types';
 
-export const useTimer = (settings: Settings): UseTimerReturn => {
+export const useTimer = (settings: Settings, soundSettings: SoundSettings): UseTimerReturn => {
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [isCountingDown, setIsCountingDown] = useState<boolean>(false);
   const [mainButtonText, setMainButtonText] = useState<string>(MAIN_BUTTON_TEXT);
@@ -37,18 +38,18 @@ export const useTimer = (settings: Settings): UseTimerReturn => {
     return getRandomInt(minSeconds, maxSeconds);
   }, [settings.minHours, settings.minMinutes, settings.minSeconds, settings.maxHours, settings.maxMinutes, settings.maxSeconds]);
 
-  const playBeepWithOutline = useCallback(async (): Promise<void> => {
+  const playSelectedSound = useCallback(async (): Promise<void> => {
     setIsBeeping(true);
-    await playBeep();
+    await playSound(soundSettings.selectedSound);
     setIsBeeping(false);
-  }, []);
+  }, [soundSettings.selectedSound]);
 
   const tick = useCallback((): void => {
     remainingRef.current = remainingRef.current - 1;
     const newRemaining = remainingRef.current;
 
     if (newRemaining <= 0) {
-      playBeepWithOutline();
+      playSelectedSound();
       const newInterval = getRandomInterval();
 
       remainingRef.current = newInterval;
@@ -58,7 +59,7 @@ export const useTimer = (settings: Settings): UseTimerReturn => {
       updateOverlay(formatTime(newRemaining));
       setMainButtonText(formatTime(newRemaining));
     }
-  }, [getRandomInterval, playBeepWithOutline, updateOverlay]);
+  }, [getRandomInterval, playSelectedSound, updateOverlay]);
 
   const stop = useCallback((): void => {
     if (timerStopperRef.current) {
@@ -87,7 +88,7 @@ export const useTimer = (settings: Settings): UseTimerReturn => {
 
       setMainButtonText(countdownDigit);
       updateOverlay(countdownDigit);
-      playBeepWithOutline();
+      playSelectedSound();
 
       await new Promise<void>((resolve) => {
         const timeoutId = setTimeout(resolve, MILLISECONDS_PER_SECOND);
@@ -99,16 +100,14 @@ export const useTimer = (settings: Settings): UseTimerReturn => {
     setIsCountingDown(false);
     setIsRunning(true);
 
-    const newInterval = getRandomInterval();
+    const interval = getRandomInterval();
 
-    remainingRef.current = newInterval;
-    updateOverlay(formatTime(newInterval));
-    setMainButtonText(formatTime(newInterval));
+    remainingRef.current = interval;
+    setMainButtonText(formatTime(interval));
+    updateOverlay(formatTime(interval));
 
-    timerStopperRef.current = createAccurateTimer(() => {
-      tick();
-    }, MILLISECONDS_PER_SECOND);
-  }, [isRunning, isCountingDown, getRandomInterval, playBeepWithOutline, updateOverlay, tick]);
+    timerStopperRef.current = createAccurateTimer(tick, MILLISECONDS_PER_SECOND);
+  }, [getRandomInterval, playSelectedSound, tick, updateOverlay, isRunning, isCountingDown]);
 
   const toggleTimer = useCallback((): void => {
     if (isRunning || isCountingDown) {
@@ -116,7 +115,7 @@ export const useTimer = (settings: Settings): UseTimerReturn => {
     } else {
       start();
     }
-  }, [isRunning, isCountingDown, stop, start]);
+  }, [isRunning, isCountingDown, start, stop]);
 
   return {
     isRunning,

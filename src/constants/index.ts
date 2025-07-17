@@ -8,11 +8,6 @@ export const MAX_HOURS = 99;
 export const MAX_MINUTES = 59;
 export const MAX_SECONDS = 59;
 
-export const BEEP_FREQUENCY = MILLISECONDS_PER_SECOND;
-export const BEEP_DURATION = 0.1;
-export const BEEP_VOLUME = 0.3;
-export const FILTER_FREQUENCY = 1800;
-
 export const COUNTDOWN_NUMBERS = [3, 2, 1];
 
 export const DEFAULT_SETTINGS = {

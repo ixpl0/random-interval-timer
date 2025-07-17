@@ -7,6 +7,8 @@
   "successHover": "#219150",
   "warning": "#f1c40f",
   "warningHover": "#bfa100",
+  "info": "#9b59b6",
+  "infoHover": "#8e44ad",
 
   "background": "#2c3e50",
   "backgroundSecondary": "#2c3845",

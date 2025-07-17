@@ -7,6 +7,12 @@ export interface Settings {
   maxSeconds: number;
 }
 
+export type SoundType = 'random' | 'beep' | 'chime' | 'alert' | 'ding' | 'whistle' | 'chirp' | 'pulse' | 'bass' | 'drum';
+
+export interface SoundSettings {
+  selectedSound: SoundType;
+}
+
 export interface UseTimerReturn {
   isRunning: boolean;
   isCountingDown: boolean;
@@ -27,11 +33,25 @@ export interface UseSettingsReturn {
   updateTempSetting: (key: keyof Settings, value: number) => void;
 }
 
+export interface UseSoundSettingsReturn {
+  soundSettings: SoundSettings;
+  tempSoundSettings: SoundSettings;
+  isSoundSettingsVisible: boolean;
+  showSoundSettings: () => void;
+  applySoundSettings: () => void;
+  hideSoundSettings: () => void;
+  updateTempSoundSetting: (soundType: SoundType) => void;
+}
+
 export interface HeaderProps {
   isSettingsVisible: boolean;
+  isSoundSettingsVisible: boolean;
   showSettings: () => void;
   hideSettings: () => void;
   applySettings: () => void;
+  showSoundSettings: () => void;
+  hideSoundSettings: () => void;
+  applySoundSettings: () => void;
 }
 
 export interface MainButtonProps {
@@ -45,6 +65,12 @@ export interface SettingsViewProps {
   isVisible: boolean;
   tempSettings: Settings;
   updateTempSetting: (key: keyof Settings, value: number) => void;
+}
+
+export interface SoundSettingsViewProps {
+  isVisible: boolean;
+  tempSoundSettings: SoundSettings;
+  updateTempSoundSetting: (soundType: SoundType) => void;
 }
 
 export interface TimeInputProps {

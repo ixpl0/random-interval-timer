@@ -68,15 +68,41 @@ const CloseButton = styled(HeaderButton)`
   }
 `;
 
+const SoundSettingsButton = styled(HeaderButton)`
+  background-color: ${theme.colors.info};
+
+  &:hover {
+    background-color: ${theme.colors.infoHover};
+  }
+`;
+
 export const Header: React.FC<HeaderProps> = ({
   isSettingsVisible,
+  isSoundSettingsVisible,
   showSettings,
   hideSettings,
   applySettings,
+  showSoundSettings,
+  hideSoundSettings,
+  applySoundSettings,
 }) => {
+  const handleSoundSettingsClick = (): void => {
+    if (isSoundSettingsVisible) {
+      applySoundSettings();
+    } else if (isSettingsVisible) {
+      hideSettings();
+      showSoundSettings();
+    } else {
+      showSoundSettings();
+    }
+  };
+
   const handleSettingsClick = (): void => {
     if (isSettingsVisible) {
       applySettings();
+    } else if (isSoundSettingsVisible) {
+      hideSoundSettings();
+      showSettings();
     } else {
       showSettings();
     }
@@ -85,6 +111,8 @@ export const Header: React.FC<HeaderProps> = ({
   const handleCloseClick = (): void => {
     if (isSettingsVisible) {
       hideSettings();
+    } else if (isSoundSettingsVisible) {
+      hideSoundSettings();
     } else {
       closeWindow();
     }
@@ -94,12 +122,17 @@ export const Header: React.FC<HeaderProps> = ({
     minimizeWindow();
   };
 
+  const soundSettingsButtonTitle = isSoundSettingsVisible ? 'Apply' : 'Sound Settings';
   const settingsButtonTitle = isSettingsVisible ? 'Apply' : 'Settings';
-  const closeButtonTitle = isSettingsVisible ? 'Cancel' : 'Close';
+  const closeButtonTitle = (isSettingsVisible || isSoundSettingsVisible) ? 'Cancel' : 'Close';
 
   return (
     <HeaderContainer>
       <HeaderButtons>
+        <SoundSettingsButton
+          title={soundSettingsButtonTitle}
+          onClick={handleSoundSettingsClick}
+        />
         <SettingsButton
           title={settingsButtonTitle}
           onClick={handleSettingsClick}
