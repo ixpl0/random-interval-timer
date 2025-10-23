@@ -10,6 +10,7 @@ import {
 import { createAccurateTimer } from '@/utils/timerUtils';
 import { playSound } from '@/utils/audioUtils';
 import { setOverlayIcon } from '@/utils/electronUtils.ts';
+import { logTimer } from '@/utils/logger';
 import type {
   Settings,
   SoundSettings,
@@ -49,8 +50,11 @@ export const useTimer = (settings: Settings, soundSettings: SoundSettings): UseT
     const newRemaining = remainingRef.current;
 
     if (newRemaining <= 0) {
+      logTimer('Срабатывание: время истекло');
       playSelectedSound();
       const newInterval = getRandomInterval();
+
+      logTimer(`Новый интервал: ${formatTime(newInterval)}`);
 
       remainingRef.current = newInterval;
       updateOverlay(formatTime(newInterval));
@@ -81,6 +85,7 @@ export const useTimer = (settings: Settings, soundSettings: SoundSettings): UseT
       return;
     }
 
+    logTimer('Старт таймера');
     setIsCountingDown(true);
 
     for (const number of COUNTDOWN_NUMBERS) {
@@ -101,6 +106,8 @@ export const useTimer = (settings: Settings, soundSettings: SoundSettings): UseT
     setIsRunning(true);
 
     const interval = getRandomInterval();
+
+    logTimer(`Первый интервал: ${formatTime(interval)}`);
 
     remainingRef.current = interval;
     setMainButtonText(formatTime(interval));

@@ -86,6 +86,8 @@ export interface ElectronAPI {
   close: () => void;
   minimize: () => void;
   setOverlayIcon: (dataURL: string) => void;
+  initLog?: (message: string) => void;
+  writeLog?: (message: string) => void;
 }
 
 export type Timeout = ReturnType<typeof setTimeout>;
