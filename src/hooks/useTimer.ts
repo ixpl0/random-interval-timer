@@ -1,5 +1,5 @@
 import {
-  useCallback, useRef, useState,
+  useCallback, useEffect, useRef, useState,
 } from 'react';
 import {
   COUNTDOWN_NUMBERS, MAIN_BUTTON_TEXT, MILLISECONDS_PER_SECOND,
@@ -27,6 +27,11 @@ export const useTimer = (settings: Settings, soundSettings: SoundSettings): UseT
   const timerStopperRef = useRef<(() => void) | null>(null);
   const countdownTimeoutsRef = useRef<Timeout[]>([]);
   const remainingRef = useRef<number>(0);
+  const soundSettingsRef = useRef<SoundSettings>(soundSettings);
+
+  useEffect(() => {
+    soundSettingsRef.current = soundSettings;
+  }, [soundSettings]);
 
   const updateOverlay = useCallback((text: string) => {
     setOverlayIcon(text);
@@ -41,9 +46,9 @@ export const useTimer = (settings: Settings, soundSettings: SoundSettings): UseT
 
   const playSelectedSound = useCallback(async (): Promise<void> => {
     setIsBeeping(true);
-    await playSound(soundSettings.selectedSound);
+    await playSound(soundSettingsRef.current.selectedSound);
     setIsBeeping(false);
-  }, [soundSettings.selectedSound]);
+  }, []);
 
   const tick = useCallback((): void => {
     remainingRef.current = remainingRef.current - 1;
