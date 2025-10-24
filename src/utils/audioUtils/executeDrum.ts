@@ -1,6 +1,6 @@
 const DRUM_FREQUENCY = 80;
 const DRUM_DURATION = 0.4;
-const DRUM_VOLUME = 0.5;
+const DRUM_VOLUME = 5;
 const DRUM_ATTACK_TIME = 0.01;
 const DRUM_DECAY_TIME = 0.1;
 

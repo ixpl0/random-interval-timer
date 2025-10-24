@@ -1,6 +1,6 @@
 const DING_FREQUENCY = 2000;
 const DING_DURATION = 0.4;
-const DING_VOLUME = 0.35;
+const DING_VOLUME = 0.9;
 
 export const executeDing = (context: AudioContext, resolve: () => void): void => {
   const oscillator = context.createOscillator();

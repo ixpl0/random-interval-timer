@@ -1,6 +1,6 @@
 const BEEP_FREQUENCY = 1000;
 const BEEP_DURATION = 0.1;
-const BEEP_VOLUME = 0.3;
+const BEEP_VOLUME = 0.7;
 const FILTER_FREQUENCY = 1800;
 
 export const executeBeep = (context: AudioContext, resolve: () => void): void => {

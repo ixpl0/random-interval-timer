@@ -1,7 +1,7 @@
 const CHIRP_START_FREQUENCY = 400;
 const CHIRP_END_FREQUENCY = 1200;
 const CHIRP_DURATION = 0.2;
-const CHIRP_VOLUME = 0.4;
+const CHIRP_VOLUME = 3;
 
 export const executeChirp = (context: AudioContext, resolve: () => void): void => {
   const oscillator = context.createOscillator();

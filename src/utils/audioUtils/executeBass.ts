@@ -1,6 +1,6 @@
 const BASS_FREQUENCY = 120;
 const BASS_DURATION = 0.35;
-const BASS_VOLUME = 0.6;
+const BASS_VOLUME = 3;
 const BASS_HARMONIC_FREQ = 240;
 
 export const executeBass = (context: AudioContext, resolve: () => void): void => {

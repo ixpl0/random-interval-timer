@@ -1,6 +1,6 @@
 const WHISTLE_FREQUENCY = 1500;
 const WHISTLE_DURATION = 0.3;
-const WHISTLE_VOLUME = 0.4;
+const WHISTLE_VOLUME = 1.8;
 const WHISTLE_SWEEP_END = 2200;
 
 export const executeWhistle = (context: AudioContext, resolve: () => void): void => {
