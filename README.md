@@ -1,7 +1,10 @@
 # ⏰random-interval-timer
 
-![Screenshot](./readme/screenshot1.png)
-![Screenshot](./readme/screenshot2.png)
+![Screenshot1](./readme/1.png)
+![Screenshot2](./readme/2.png)
+
+![Screenshot3](./readme/3.png)
+![Screenshot4](./readme/4.png)
 
 Random interval timer with a beep sound, ranging from a minimum of **1 second** to a maximum of **99 hours, 59 minutes, and 59 seconds**
 
