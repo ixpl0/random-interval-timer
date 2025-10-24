@@ -1,5 +1,4 @@
 import type { SoundType } from '@/types';
-import { logSound } from '@/utils/logger';
 import { executeAlert } from './executeAlert';
 import { executeBass } from './executeBass';
 import { executeBeep } from './executeBeep';
@@ -19,8 +18,6 @@ const getRandomSoundType = (): SoundType => {
 
 export const executeSoundByType = (soundType: SoundType, context: AudioContext, resolve: () => void): void => {
   const actualSoundType = soundType === 'random' ? getRandomSoundType() : soundType;
-
-  logSound(`Исполнение: ${actualSoundType}`);
 
   switch (actualSoundType) {
     case 'beep': {

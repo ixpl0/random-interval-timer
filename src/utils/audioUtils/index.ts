@@ -1,5 +1,4 @@
 import type { SoundType } from '@/types';
-import { logSound } from '@/utils/logger';
 import { getOrCreateAudioContext } from './audioContextManager';
 import {
   createPendingSoundPromise,
@@ -28,16 +27,8 @@ const keepAudioContextAlive = (): void => {
     const context = getOrCreateAudioContext();
 
     if (context.state === 'suspended') {
-      logSound('KeepAlive: context suspended, пытаюсь resume');
-      void context.resume()
-        .then(() => {
-          logSound(`KeepAlive: resume успешен, state: ${context.state}`);
-        })
-        .catch((error) => {
-          logSound(`KeepAlive: resume failed: ${error instanceof Error ? error.message : String(error)}`);
-        });
+      void context.resume();
     } else if (context.state === 'running') {
-      logSound('KeepAlive: отправка беззвучного сигнала');
       playSilentTone(context);
     }
   }, AUDIO_CONTEXT_KEEPALIVE_INTERVAL_MS);
@@ -49,35 +40,22 @@ export const initAudio = (): void => {
 };
 
 export const playSound = async (soundType: SoundType): Promise<void> => {
-  logSound(`Запрос: ${soundType}`);
   const context = getOrCreateAudioContext();
   const state = getPendingSoundState();
   const hasPendingSound = Boolean(state.promise);
 
-  logSound(`AudioContext state: ${context.state}, pending: ${hasPendingSound}`);
-
   if (context.state === 'suspended') {
-    logSound('AudioContext suspended, пытаюсь resume');
-
-    try {
-      await context.resume();
-      logSound(`Resume успешен, новый state: ${context.state}`);
-    } catch (error) {
-      logSound(`Resume failed: ${error instanceof Error ? error.message : String(error)}`);
-    }
+    await context.resume();
   }
 
   if (context.state === 'running' && !hasPendingSound) {
-    logSound('Прямое воспроизведение');
     await new Promise<void>((resolve) => {
       executeSoundByType(soundType, context, resolve);
     });
-    logSound('Завершено');
 
     return;
   }
 
-  logSound('Отложенное воспроизведение');
   state.soundType = soundType;
   const pendingPlayback = createPendingSoundPromise();
 
@@ -90,7 +68,6 @@ export const playSound = async (soundType: SoundType): Promise<void> => {
   const processed = await processPendingSound();
 
   if (!processed) {
-    logSound('Retry запланирован');
     schedulePendingSoundRetry();
   }
 
