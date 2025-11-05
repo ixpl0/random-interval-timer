@@ -1,6 +1,6 @@
 {
   "name": "random-interval-timer",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "main": "node/index.js",
   "scripts": {
     "start": "electron .",
@@ -31,7 +31,7 @@
     "@types/react-dom": "^19.1.6",
     "@typescript-eslint/eslint-plugin": "^8.36.0",
     "@typescript-eslint/parser": "^8.36.0",
-    "electron": "^37.2.1",
+    "electron": "^37.8.0",
     "eslint": "^9.31.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
@@ -46,6 +46,6 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "styled-components": "^6.1.19",
-    "vite": "^7.0.4"
+    "vite": "^7.2.0"
   }
 }
