@@ -90,6 +90,7 @@ export const Header: React.FC<HeaderProps> = ({
     if (isSoundSettingsVisible) {
       applySoundSettings();
     } else if (isSettingsVisible) {
+      applySettings();
       hideSettings();
       showSoundSettings();
     } else {
@@ -101,6 +102,7 @@ export const Header: React.FC<HeaderProps> = ({
     if (isSettingsVisible) {
       applySettings();
     } else if (isSoundSettingsVisible) {
+      applySoundSettings();
       hideSoundSettings();
       showSettings();
     } else {
@@ -122,8 +124,30 @@ export const Header: React.FC<HeaderProps> = ({
     minimizeWindow();
   };
 
-  const soundSettingsButtonTitle = isSoundSettingsVisible ? 'Apply' : 'Sound Settings';
-  const settingsButtonTitle = isSettingsVisible ? 'Apply' : 'Settings';
+  const soundSettingsButtonTitle = (() => {
+    if (isSoundSettingsVisible) {
+      return 'Apply';
+    }
+
+    if (isSettingsVisible) {
+      return 'Apply & Go to Sound Settings';
+    }
+
+    return 'Sound Settings';
+  })();
+
+  const settingsButtonTitle = (() => {
+    if (isSettingsVisible) {
+      return 'Apply';
+    }
+
+    if (isSoundSettingsVisible) {
+      return 'Apply & Go to Settings';
+    }
+
+    return 'Settings';
+  })();
+
   const closeButtonTitle = (isSettingsVisible || isSoundSettingsVisible) ? 'Cancel' : 'Close';
 
   return (
