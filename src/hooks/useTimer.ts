@@ -17,9 +17,10 @@ import type {
   UseTimerReturn,
 } from '@/types';
 
+type TimerState = 'idle' | 'countdown' | 'running';
+
 export const useTimer = (settings: Settings, soundSettings: SoundSettings): UseTimerReturn => {
-  const [isRunning, setIsRunning] = useState<boolean>(false);
-  const [isCountingDown, setIsCountingDown] = useState<boolean>(false);
+  const [timerState, setTimerState] = useState<TimerState>('idle');
   const [mainButtonText, setMainButtonText] = useState<string>(MAIN_BUTTON_TEXT);
   const [isBeeping, setIsBeeping] = useState<boolean>(false);
 
@@ -54,7 +55,7 @@ export const useTimer = (settings: Settings, soundSettings: SoundSettings): UseT
     const newRemaining = remainingRef.current;
 
     if (newRemaining <= 0) {
-      playSelectedSound();
+      void playSelectedSound();
       const newInterval = getRandomInterval();
 
       remainingRef.current = newInterval;
@@ -75,25 +76,24 @@ export const useTimer = (settings: Settings, soundSettings: SoundSettings): UseT
     countdownTimeoutsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
     countdownTimeoutsRef.current = [];
 
-    setIsRunning(false);
-    setIsCountingDown(false);
+    setTimerState('idle');
     setMainButtonText(MAIN_BUTTON_TEXT);
     updateOverlay('');
   }, [updateOverlay]);
 
   const start = useCallback(async (): Promise<void> => {
-    if (isRunning || isCountingDown) {
+    if (timerState !== 'idle') {
       return;
     }
 
-    setIsCountingDown(true);
+    setTimerState('countdown');
 
     for (const number of COUNTDOWN_NUMBERS) {
       const countdownDigit = String(number);
 
       setMainButtonText(countdownDigit);
       updateOverlay(countdownDigit);
-      playSelectedSound();
+      void playSelectedSound();
 
       await new Promise<void>((resolve) => {
         const timeoutId = setTimeout(resolve, MILLISECONDS_PER_SECOND);
@@ -102,8 +102,7 @@ export const useTimer = (settings: Settings, soundSettings: SoundSettings): UseT
       });
     }
 
-    setIsCountingDown(false);
-    setIsRunning(true);
+    setTimerState('running');
 
     const interval = getRandomInterval();
 
@@ -112,15 +111,18 @@ export const useTimer = (settings: Settings, soundSettings: SoundSettings): UseT
     updateOverlay(formatTime(interval));
 
     timerStopperRef.current = createAccurateTimer(tick, MILLISECONDS_PER_SECOND);
-  }, [getRandomInterval, playSelectedSound, tick, updateOverlay, isRunning, isCountingDown]);
+  }, [getRandomInterval, playSelectedSound, tick, updateOverlay, timerState]);
 
   const toggleTimer = useCallback((): void => {
-    if (isRunning || isCountingDown) {
+    if (timerState !== 'idle') {
       stop();
     } else {
-      start();
+      void start();
     }
-  }, [isRunning, isCountingDown, start, stop]);
+  }, [timerState, start, stop]);
+
+  const isRunning = timerState === 'running';
+  const isCountingDown = timerState === 'countdown';
 
   return {
     isRunning,
