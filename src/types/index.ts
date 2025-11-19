@@ -48,7 +48,7 @@ export interface HeaderProps {
   activeView: ActiveView;
   settingsActions: Actions;
   soundSettingsActions: Actions;
-  cancelSettings: () => void;
+  goToMain: () => void;
 }
 
 export interface MainButtonProps {

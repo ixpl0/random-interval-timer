@@ -80,7 +80,7 @@ export const Header: React.FC<HeaderProps> = ({
   activeView,
   settingsActions,
   soundSettingsActions,
-  cancelSettings,
+  goToMain,
 }) => {
   const isSettingsVisible = activeView === 'settings';
   const isSoundSettingsVisible = activeView === 'soundSettings';
@@ -88,6 +88,10 @@ export const Header: React.FC<HeaderProps> = ({
   const handleSoundSettingsClick = (): void => {
     if (isSoundSettingsVisible) {
       soundSettingsActions.apply();
+      goToMain();
+    } else if (isSettingsVisible) {
+      settingsActions.apply();
+      soundSettingsActions.show();
     } else {
       soundSettingsActions.show();
     }
@@ -96,6 +100,10 @@ export const Header: React.FC<HeaderProps> = ({
   const handleSettingsClick = (): void => {
     if (isSettingsVisible) {
       settingsActions.apply();
+      goToMain();
+    } else if (isSoundSettingsVisible) {
+      soundSettingsActions.apply();
+      settingsActions.show();
     } else {
       settingsActions.show();
     }
@@ -103,7 +111,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   const handleCloseClick = (): void => {
     if (isSettingsVisible || isSoundSettingsVisible) {
-      cancelSettings();
+      goToMain();
     } else {
       closeWindow();
     }
@@ -113,8 +121,30 @@ export const Header: React.FC<HeaderProps> = ({
     minimizeWindow();
   };
 
-  const soundSettingsButtonTitle = isSoundSettingsVisible ? 'Apply' : 'Sound Settings';
-  const settingsButtonTitle = isSettingsVisible ? 'Apply' : 'Settings';
+  const soundSettingsButtonTitle = (() => {
+    if (isSoundSettingsVisible) {
+      return 'Apply';
+    }
+
+    if (isSettingsVisible) {
+      return 'Apply & Go to Sound Settings';
+    }
+
+    return 'Sound Settings';
+  })();
+
+  const settingsButtonTitle = (() => {
+    if (isSettingsVisible) {
+      return 'Apply';
+    }
+
+    if (isSoundSettingsVisible) {
+      return 'Apply & Go to Settings';
+    }
+
+    return 'Settings';
+  })();
+
   const closeButtonTitle = (isSettingsVisible || isSoundSettingsVisible) ? 'Cancel' : 'Close';
 
   return (

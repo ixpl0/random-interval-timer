@@ -67,21 +67,15 @@ export const App: React.FC = () => {
 
   const settingsActions = {
     show: useCallback(() => setActiveView('settings'), []),
-    apply: useCallback(() => {
-      applySettings();
-      setActiveView('main');
-    }, [applySettings]),
+    apply: applySettings,
   };
 
   const soundSettingsActions = {
     show: useCallback(() => setActiveView('soundSettings'), []),
-    apply: useCallback(() => {
-      applySoundSettings();
-      setActiveView('main');
-    }, [applySoundSettings]),
+    apply: applySoundSettings,
   };
 
-  const cancelSettings = useCallback(() => {
+  const goToMain = useCallback(() => {
     setActiveView('main');
   }, []);
 
@@ -91,7 +85,7 @@ export const App: React.FC = () => {
         activeView={activeView}
         settingsActions={settingsActions}
         soundSettingsActions={soundSettingsActions}
-        cancelSettings={cancelSettings}
+        goToMain={goToMain}
       />
       <Main>
         {activeView === 'settings' ? (
