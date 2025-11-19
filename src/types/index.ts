@@ -79,6 +79,10 @@ export interface TimeInputProps {
   onSecondsChange: (value: number) => void;
 }
 
+export interface TimeSettingsRowProps extends TimeInputProps {
+  label: string;
+}
+
 export interface ElectronAPI {
   close: () => void;
   minimize: () => void;
