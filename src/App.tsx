@@ -65,25 +65,23 @@ export const App: React.FC = () => {
     initAudio();
   }, []);
 
-  const handleShowSettings = useCallback(() => {
-    setActiveView('settings');
-  }, []);
+  const settingsActions = {
+    show: useCallback(() => setActiveView('settings'), []),
+    apply: useCallback(() => {
+      applySettings();
+      setActiveView('main');
+    }, [applySettings]),
+  };
 
-  const handleShowSoundSettings = useCallback(() => {
-    setActiveView('soundSettings');
-  }, []);
+  const soundSettingsActions = {
+    show: useCallback(() => setActiveView('soundSettings'), []),
+    apply: useCallback(() => {
+      applySoundSettings();
+      setActiveView('main');
+    }, [applySoundSettings]),
+  };
 
-  const handleApplySettings = useCallback(() => {
-    applySettings();
-    setActiveView('main');
-  }, [applySettings]);
-
-  const handleApplySoundSettings = useCallback(() => {
-    applySoundSettings();
-    setActiveView('main');
-  }, [applySoundSettings]);
-
-  const handleCancelSettings = useCallback(() => {
+  const cancelSettings = useCallback(() => {
     setActiveView('main');
   }, []);
 
@@ -91,11 +89,9 @@ export const App: React.FC = () => {
     <PageWrapper>
       <Header
         activeView={activeView}
-        showSettings={handleShowSettings}
-        showSoundSettings={handleShowSoundSettings}
-        applySettings={handleApplySettings}
-        applySoundSettings={handleApplySoundSettings}
-        cancelSettings={handleCancelSettings}
+        settingsActions={settingsActions}
+        soundSettingsActions={soundSettingsActions}
+        cancelSettings={cancelSettings}
       />
       <Main>
         {activeView === 'settings' ? (

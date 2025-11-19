@@ -39,12 +39,15 @@ export interface UseSoundSettingsReturn {
 
 export type ActiveView = 'main' | 'settings' | 'soundSettings';
 
+interface Actions {
+  show: () => void;
+  apply: () => void;
+}
+
 export interface HeaderProps {
   activeView: ActiveView;
-  showSettings: () => void;
-  showSoundSettings: () => void;
-  applySettings: () => void;
-  applySoundSettings: () => void;
+  settingsActions: Actions;
+  soundSettingsActions: Actions;
   cancelSettings: () => void;
 }
 

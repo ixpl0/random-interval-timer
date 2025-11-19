@@ -78,10 +78,8 @@ const SoundSettingsButton = styled(HeaderButton)`
 
 export const Header: React.FC<HeaderProps> = ({
   activeView,
-  showSettings,
-  showSoundSettings,
-  applySettings,
-  applySoundSettings,
+  settingsActions,
+  soundSettingsActions,
   cancelSettings,
 }) => {
   const isSettingsVisible = activeView === 'settings';
@@ -89,17 +87,17 @@ export const Header: React.FC<HeaderProps> = ({
 
   const handleSoundSettingsClick = (): void => {
     if (isSoundSettingsVisible) {
-      applySoundSettings();
+      soundSettingsActions.apply();
     } else {
-      showSoundSettings();
+      soundSettingsActions.show();
     }
   };
 
   const handleSettingsClick = (): void => {
     if (isSettingsVisible) {
-      applySettings();
+      settingsActions.apply();
     } else {
-      showSettings();
+      settingsActions.show();
     }
   };
 
