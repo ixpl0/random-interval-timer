@@ -26,32 +26,26 @@ export interface UseTimerReturn {
 export interface UseSettingsReturn {
   settings: Settings;
   tempSettings: Settings;
-  isSettingsVisible: boolean;
-  showSettings: () => void;
   applySettings: () => void;
-  hideSettings: () => void;
   updateTempSetting: (key: keyof Settings, value: number) => void;
 }
 
 export interface UseSoundSettingsReturn {
   soundSettings: SoundSettings;
   tempSoundSettings: SoundSettings;
-  isSoundSettingsVisible: boolean;
-  showSoundSettings: () => void;
   applySoundSettings: () => void;
-  hideSoundSettings: () => void;
   updateTempSoundSetting: (soundType: SoundType) => void;
 }
 
+export type ActiveView = 'main' | 'settings' | 'soundSettings';
+
 export interface HeaderProps {
-  isSettingsVisible: boolean;
-  isSoundSettingsVisible: boolean;
+  activeView: ActiveView;
   showSettings: () => void;
-  hideSettings: () => void;
-  applySettings: () => void;
   showSoundSettings: () => void;
-  hideSoundSettings: () => void;
+  applySettings: () => void;
   applySoundSettings: () => void;
+  cancelSettings: () => void;
 }
 
 export interface MainButtonProps {

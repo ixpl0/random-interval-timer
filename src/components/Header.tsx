@@ -77,22 +77,19 @@ const SoundSettingsButton = styled(HeaderButton)`
 `;
 
 export const Header: React.FC<HeaderProps> = ({
-  isSettingsVisible,
-  isSoundSettingsVisible,
+  activeView,
   showSettings,
-  hideSettings,
-  applySettings,
   showSoundSettings,
-  hideSoundSettings,
+  applySettings,
   applySoundSettings,
+  cancelSettings,
 }) => {
+  const isSettingsVisible = activeView === 'settings';
+  const isSoundSettingsVisible = activeView === 'soundSettings';
+
   const handleSoundSettingsClick = (): void => {
     if (isSoundSettingsVisible) {
       applySoundSettings();
-    } else if (isSettingsVisible) {
-      applySettings();
-      hideSettings();
-      showSoundSettings();
     } else {
       showSoundSettings();
     }
@@ -101,20 +98,14 @@ export const Header: React.FC<HeaderProps> = ({
   const handleSettingsClick = (): void => {
     if (isSettingsVisible) {
       applySettings();
-    } else if (isSoundSettingsVisible) {
-      applySoundSettings();
-      hideSoundSettings();
-      showSettings();
     } else {
       showSettings();
     }
   };
 
   const handleCloseClick = (): void => {
-    if (isSettingsVisible) {
-      hideSettings();
-    } else if (isSoundSettingsVisible) {
-      hideSoundSettings();
+    if (isSettingsVisible || isSoundSettingsVisible) {
+      cancelSettings();
     } else {
       closeWindow();
     }
@@ -124,30 +115,8 @@ export const Header: React.FC<HeaderProps> = ({
     minimizeWindow();
   };
 
-  const soundSettingsButtonTitle = (() => {
-    if (isSoundSettingsVisible) {
-      return 'Apply';
-    }
-
-    if (isSettingsVisible) {
-      return 'Apply & Go to Sound Settings';
-    }
-
-    return 'Sound Settings';
-  })();
-
-  const settingsButtonTitle = (() => {
-    if (isSettingsVisible) {
-      return 'Apply';
-    }
-
-    if (isSoundSettingsVisible) {
-      return 'Apply & Go to Settings';
-    }
-
-    return 'Settings';
-  })();
-
+  const soundSettingsButtonTitle = isSoundSettingsVisible ? 'Apply' : 'Sound Settings';
+  const settingsButtonTitle = isSettingsVisible ? 'Apply' : 'Settings';
   const closeButtonTitle = (isSettingsVisible || isSoundSettingsVisible) ? 'Cancel' : 'Close';
 
   return (

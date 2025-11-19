@@ -1,4 +1,8 @@
-import React, { useEffect } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import styled from 'styled-components';
 import { theme } from '@/constants/theme';
 import { useSettings } from '@/hooks/useSettings';
@@ -10,6 +14,8 @@ import { MainButton } from '@/components/MainButton';
 import { SettingsView } from '@/components/SettingsView';
 import { SoundSettingsView } from '@/components/SoundSettingsView';
 import '@/index.css';
+
+type ActiveView = 'main' | 'settings' | 'soundSettings';
 
 const PageWrapper = styled.div`
   width: 100%;
@@ -32,23 +38,19 @@ const Main = styled.main`
 `;
 
 export const App: React.FC = () => {
+  const [activeView, setActiveView] = useState<ActiveView>('main');
+
   const {
     settings,
     tempSettings,
-    isSettingsVisible,
-    showSettings,
     applySettings,
-    hideSettings,
     updateTempSetting,
   } = useSettings();
 
   const {
     soundSettings,
     tempSoundSettings,
-    isSoundSettingsVisible,
-    showSoundSettings,
     applySoundSettings,
-    hideSoundSettings,
     updateTempSoundSetting,
   } = useSoundSettings();
 
@@ -63,28 +65,48 @@ export const App: React.FC = () => {
     initAudio();
   }, []);
 
+  const handleShowSettings = useCallback(() => {
+    setActiveView('settings');
+  }, []);
+
+  const handleShowSoundSettings = useCallback(() => {
+    setActiveView('soundSettings');
+  }, []);
+
+  const handleApplySettings = useCallback(() => {
+    applySettings();
+    setActiveView('main');
+  }, [applySettings]);
+
+  const handleApplySoundSettings = useCallback(() => {
+    applySoundSettings();
+    setActiveView('main');
+  }, [applySoundSettings]);
+
+  const handleCancelSettings = useCallback(() => {
+    setActiveView('main');
+  }, []);
+
   return (
     <PageWrapper>
       <Header
-        isSettingsVisible={isSettingsVisible}
-        isSoundSettingsVisible={isSoundSettingsVisible}
-        showSettings={showSettings}
-        hideSettings={hideSettings}
-        applySettings={applySettings}
-        showSoundSettings={showSoundSettings}
-        hideSoundSettings={hideSoundSettings}
-        applySoundSettings={applySoundSettings}
+        activeView={activeView}
+        showSettings={handleShowSettings}
+        showSoundSettings={handleShowSoundSettings}
+        applySettings={handleApplySettings}
+        applySoundSettings={handleApplySoundSettings}
+        cancelSettings={handleCancelSettings}
       />
       <Main>
-        {isSettingsVisible ? (
+        {activeView === 'settings' ? (
           <SettingsView
-            isVisible={isSettingsVisible}
+            isVisible
             tempSettings={tempSettings}
             updateTempSetting={updateTempSetting}
           />
-        ) : isSoundSettingsVisible ? (
+        ) : activeView === 'soundSettings' ? (
           <SoundSettingsView
-            isVisible={isSoundSettingsVisible}
+            isVisible
             tempSoundSettings={tempSoundSettings}
             updateTempSoundSetting={updateTempSoundSetting}
           />

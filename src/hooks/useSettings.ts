@@ -6,18 +6,8 @@ import { convertToSeconds, validateTimeValue } from '@/utils/timeUtils';
 import type { Settings, UseSettingsReturn } from '@/types';
 
 export const useSettings = (): UseSettingsReturn => {
-  const [isSettingsVisible, setIsSettingsVisible] = useState<boolean>(false);
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
   const [tempSettings, setTempSettings] = useState<Settings>(settings);
-
-  const showSettings = useCallback(() => {
-    setTempSettings({ ...settings });
-    setIsSettingsVisible(true);
-  }, [settings]);
-
-  const hideSettings = useCallback(() => {
-    setIsSettingsVisible(false);
-  }, []);
 
   const applySettings = useCallback(() => {
     const {
@@ -37,7 +27,6 @@ export const useSettings = (): UseSettingsReturn => {
     }
 
     setSettings({ ...tempSettings });
-    setIsSettingsVisible(false);
   }, [tempSettings]);
 
   const updateTempSetting = useCallback((key: keyof Settings, value: number) => {
@@ -53,10 +42,7 @@ export const useSettings = (): UseSettingsReturn => {
   return {
     settings,
     tempSettings,
-    isSettingsVisible,
-    showSettings,
     applySettings,
-    hideSettings,
     updateTempSetting,
   };
 };
