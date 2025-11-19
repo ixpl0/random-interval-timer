@@ -84,13 +84,7 @@ export const useTimer = (settings: Settings, soundSettings: SoundSettings): UseT
     updateOverlay('');
   }, [updateOverlay]);
 
-  const start = useCallback(async (): Promise<void> => {
-    if (timerState !== 'idle') {
-      return;
-    }
-
-    setTimerState('countdown');
-
+  const performCountdown = useCallback(async (): Promise<void> => {
     for (const number of COUNTDOWN_NUMBERS) {
       const countdownDigit = String(number);
 
@@ -104,6 +98,15 @@ export const useTimer = (settings: Settings, soundSettings: SoundSettings): UseT
         countdownTimeoutsRef.current.push(timeoutId);
       });
     }
+  }, [playSelectedSound, updateOverlay]);
+
+  const start = useCallback(async (): Promise<void> => {
+    if (timerState !== 'idle') {
+      return;
+    }
+
+    setTimerState('countdown');
+    await performCountdown();
 
     setTimerState('running');
     setCountdownValue('');
@@ -114,7 +117,7 @@ export const useTimer = (settings: Settings, soundSettings: SoundSettings): UseT
     updateOverlay(formatTime(interval));
 
     timerStopperRef.current = createAccurateTimer(tick, MILLISECONDS_PER_SECOND);
-  }, [getRandomInterval, playSelectedSound, tick, updateOverlay, timerState]);
+  }, [getRandomInterval, performCountdown, tick, updateOverlay, timerState]);
 
   const toggleTimer = useCallback((): void => {
     if (timerState !== 'idle') {
