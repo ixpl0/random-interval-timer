@@ -1,8 +1,7 @@
 const DING_FREQUENCY = 2000;
 const DING_DURATION = 0.4;
-const DING_VOLUME = 0.9;
 
-export const executeDing = (context: AudioContext, resolve: () => void): void => {
+export const executeDing = (context: AudioContext, volume: number, resolve: () => void): void => {
   const oscillator = context.createOscillator();
   const gainNode = context.createGain();
   const filter = context.createBiquadFilter();
@@ -14,7 +13,7 @@ export const executeDing = (context: AudioContext, resolve: () => void): void =>
   filter.frequency.setValueAtTime(DING_FREQUENCY, context.currentTime);
   filter.Q.setValueAtTime(10, context.currentTime);
 
-  gainNode.gain.setValueAtTime(DING_VOLUME, context.currentTime);
+  gainNode.gain.setValueAtTime(volume, context.currentTime);
   gainNode.gain.exponentialRampToValueAtTime(0.001, context.currentTime + DING_DURATION);
 
   oscillator.connect(filter);

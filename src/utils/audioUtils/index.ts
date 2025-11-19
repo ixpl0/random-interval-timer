@@ -39,7 +39,7 @@ export const initAudio = (): void => {
   keepAudioContextAlive();
 };
 
-export const playSound = async (soundType: SoundType): Promise<void> => {
+export const playSound = async (soundType: SoundType, volume: number): Promise<void> => {
   const context = getOrCreateAudioContext();
   const state = getPendingSoundState();
   const hasPendingSound = Boolean(state.promise);
@@ -50,7 +50,7 @@ export const playSound = async (soundType: SoundType): Promise<void> => {
 
   if (context.state === 'running' && !hasPendingSound) {
     await new Promise<void>((resolve) => {
-      executeSoundByType(soundType, context, resolve);
+      executeSoundByType(soundType, context, volume, resolve);
     });
 
     return;
@@ -72,10 +72,6 @@ export const playSound = async (soundType: SoundType): Promise<void> => {
   }
 
   return pendingPlayback;
-};
-
-export const playBeep = (): Promise<void> => {
-  return playSound('beep');
 };
 
 export { executeSoundByType } from './soundExecutor';

@@ -1,10 +1,9 @@
 const ALERT_FREQUENCY = 800;
 const ALERT_DURATION = 0.25;
-const ALERT_VOLUME = 0.7;
 const ALERT_WARBLE_SPEED = 8;
 const ALERT_WARBLE_DEPTH = 200;
 
-export const executeAlert = (context: AudioContext, resolve: () => void): void => {
+export const executeAlert = (context: AudioContext, volume: number, resolve: () => void): void => {
   const oscillator = context.createOscillator();
   const gainNode = context.createGain();
   const lfo = context.createOscillator();
@@ -21,7 +20,7 @@ export const executeAlert = (context: AudioContext, resolve: () => void): void =
   lfoGain.connect(oscillator.frequency);
 
   gainNode.gain.setValueAtTime(0, context.currentTime);
-  gainNode.gain.linearRampToValueAtTime(ALERT_VOLUME, context.currentTime + 0.02);
+  gainNode.gain.linearRampToValueAtTime(volume, context.currentTime + 0.02);
   gainNode.gain.linearRampToValueAtTime(0, context.currentTime + ALERT_DURATION);
 
   oscillator.connect(gainNode);

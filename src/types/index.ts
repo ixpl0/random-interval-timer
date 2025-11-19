@@ -7,10 +7,11 @@ export interface Settings {
   maxSeconds: number;
 }
 
-export type SoundType = 'random' | 'beep' | 'chime' | 'alert' | 'ding' | 'whistle' | 'chirp' | 'pulse' | 'bass' | 'drum';
+export type SoundType = 'random' | 'beep' | 'chime' | 'alert' | 'ding' | 'whistle' | 'chirp' | 'pulse';
 
 export interface SoundSettings {
   selectedSound: SoundType;
+  volume: number;
 }
 
 export interface UseTimerReturn {
@@ -35,6 +36,7 @@ export interface UseSoundSettingsReturn {
   tempSoundSettings: SoundSettings;
   applySoundSettings: () => void;
   updateTempSoundSetting: (soundType: SoundType) => void;
+  updateTempVolume: (volume: number) => void;
 }
 
 export type ActiveView = 'main' | 'settings' | 'soundSettings';
@@ -68,6 +70,7 @@ export interface SoundSettingsViewProps {
   isVisible: boolean;
   tempSoundSettings: SoundSettings;
   updateTempSoundSetting: (soundType: SoundType) => void;
+  updateTempVolume: (volume: number) => void;
 }
 
 export interface TimeInputProps {
@@ -80,6 +83,12 @@ export interface TimeInputProps {
 }
 
 export interface TimeSettingsRowProps extends TimeInputProps {
+  label: string;
+}
+
+export interface SoundOption {
+  type: SoundType;
+  icon: string;
   label: string;
 }
 

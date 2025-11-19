@@ -1,3 +1,5 @@
+import type { SoundOption } from '@/types';
+
 export const MAIN_BUTTON_TEXT = 'GO!';
 
 export const SECONDS_PER_MINUTE = 60;
@@ -18,3 +20,46 @@ export const DEFAULT_SETTINGS = {
   maxMinutes: 4,
   maxSeconds: 45,
 };
+
+export const SOUND_OPTIONS: SoundOption[] = [
+  {
+    type: 'random',
+    icon: '🎲',
+    label: 'Random',
+  },
+  {
+    type: 'beep',
+    icon: '📢',
+    label: 'Beep',
+  },
+  {
+    type: 'chime',
+    icon: '🔔',
+    label: 'Chime',
+  },
+  {
+    type: 'alert',
+    icon: '🚨',
+    label: 'Alert',
+  },
+  {
+    type: 'ding',
+    icon: '🔊',
+    label: 'Ding',
+  },
+  {
+    type: 'whistle',
+    icon: '🎵',
+    label: 'Whistle',
+  },
+  {
+    type: 'chirp',
+    icon: '🐦',
+    label: 'Chirp',
+  },
+  {
+    type: 'pulse',
+    icon: '⚡',
+    label: 'Pulse',
+  },
+];

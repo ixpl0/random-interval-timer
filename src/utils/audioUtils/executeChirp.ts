@@ -1,9 +1,8 @@
 const CHIRP_START_FREQUENCY = 400;
 const CHIRP_END_FREQUENCY = 1200;
 const CHIRP_DURATION = 0.2;
-const CHIRP_VOLUME = 3;
 
-export const executeChirp = (context: AudioContext, resolve: () => void): void => {
+export const executeChirp = (context: AudioContext, volume: number, resolve: () => void): void => {
   const oscillator = context.createOscillator();
   const gainNode = context.createGain();
   const filter = context.createBiquadFilter();
@@ -17,7 +16,7 @@ export const executeChirp = (context: AudioContext, resolve: () => void): void =
   filter.Q.setValueAtTime(2, context.currentTime);
 
   gainNode.gain.setValueAtTime(0, context.currentTime);
-  gainNode.gain.linearRampToValueAtTime(CHIRP_VOLUME, context.currentTime + 0.02);
+  gainNode.gain.linearRampToValueAtTime(volume, context.currentTime + 0.02);
   gainNode.gain.exponentialRampToValueAtTime(0.001, context.currentTime + CHIRP_DURATION);
 
   oscillator.connect(filter);

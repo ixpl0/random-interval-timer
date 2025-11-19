@@ -52,6 +52,7 @@ export const App: React.FC = () => {
     tempSoundSettings,
     applySoundSettings,
     updateTempSoundSetting,
+    updateTempVolume,
   } = useSoundSettings();
 
   const {
@@ -99,6 +100,7 @@ export const App: React.FC = () => {
             isVisible
             tempSoundSettings={tempSoundSettings}
             updateTempSoundSetting={updateTempSoundSetting}
+            updateTempVolume={updateTempVolume}
           />
         ) : (
           <MainButton

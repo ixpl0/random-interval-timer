@@ -5,7 +5,10 @@ import type {
   UseSoundSettingsReturn,
 } from '@/types';
 
-const DEFAULT_SOUND_SETTINGS: SoundSettings = { selectedSound: 'beep' };
+const DEFAULT_SOUND_SETTINGS: SoundSettings = {
+  selectedSound: 'beep',
+  volume: 0.5,
+};
 
 export const useSoundSettings = (): UseSoundSettingsReturn => {
   const [soundSettings, setSoundSettings] = useState<SoundSettings>(DEFAULT_SOUND_SETTINGS);
@@ -16,7 +19,17 @@ export const useSoundSettings = (): UseSoundSettingsReturn => {
   }, [tempSoundSettings]);
 
   const updateTempSoundSetting = useCallback((soundType: SoundType): void => {
-    setTempSoundSettings({ selectedSound: soundType });
+    setTempSoundSettings((prev) => ({
+      ...prev,
+      selectedSound: soundType,
+    }));
+  }, []);
+
+  const updateTempVolume = useCallback((volume: number): void => {
+    setTempSoundSettings((prev) => ({
+      ...prev,
+      volume,
+    }));
   }, []);
 
   return {
@@ -24,5 +37,6 @@ export const useSoundSettings = (): UseSoundSettingsReturn => {
     soundSettings,
     tempSoundSettings,
     updateTempSoundSetting,
+    updateTempVolume,
   };
 };

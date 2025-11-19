@@ -46,7 +46,7 @@ export const useTimer = (settings: Settings, soundSettings: SoundSettings): UseT
 
   const playSelectedSound = useCallback(async (): Promise<void> => {
     setIsBeeping(true);
-    await playSound(soundSettingsRef.current.selectedSound);
+    await playSound(soundSettingsRef.current.selectedSound, soundSettingsRef.current.volume);
     setIsBeeping(false);
   }, []);
 

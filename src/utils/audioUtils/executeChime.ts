@@ -1,14 +1,13 @@
 const CHIME_FREQUENCIES = [523.25, 659.25, 783.99]; // C5, E5, G5
 const CHIME_DURATION = 0.2;
-const CHIME_VOLUME = 0.8;
 const CHIME_ATTACK_TIME = 0.01;
 const CHIME_RELEASE_TIME = 0.1;
 
-export const executeChime = (context: AudioContext, resolve: () => void): void => {
+export const executeChime = (context: AudioContext, volume: number, resolve: () => void): void => {
   const masterGain = context.createGain();
 
   masterGain.connect(context.destination);
-  masterGain.gain.setValueAtTime(CHIME_VOLUME, context.currentTime);
+  masterGain.gain.setValueAtTime(volume, context.currentTime);
 
   let completedOscillators = 0;
   const totalOscillators = CHIME_FREQUENCIES.length;
