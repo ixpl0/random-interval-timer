@@ -5,13 +5,9 @@ import { SOUND_OPTIONS } from '@/constants';
 import { playSound } from '@/utils/audioUtils';
 import type { SoundSettingsViewProps, SoundType } from '@/types';
 
-interface SoundSettingsContainerProps {
-  $isVisible: boolean;
-}
-
-const SoundSettingsContainer = styled.div<SoundSettingsContainerProps>`
+const SoundSettingsContainer = styled.div`
   font-size: ${theme.typography.fontSize.small};
-  display: ${(props) => props.$isVisible ? 'flex' : 'none'};
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -76,7 +72,7 @@ const VolumeSlider = styled.input.attrs({ type: 'range' })`
   width: 72px;
   height: 20px;
   outline: none;
-  transform: rotate(-90deg) translate(9px, 21px);
+  transform: rotate(-90deg) translate(9px, 20px);
   transform-origin: 50% 50%;
   cursor: pointer;
   -webkit-app-region: no-drag;  
@@ -110,7 +106,6 @@ const VolumeSlider = styled.input.attrs({ type: 'range' })`
 `;
 
 export const SoundSettingsView: React.FC<SoundSettingsViewProps> = ({
-  isVisible,
   tempSoundSettings,
   updateTempSoundSetting,
   updateTempVolume,
@@ -127,7 +122,7 @@ export const SoundSettingsView: React.FC<SoundSettingsViewProps> = ({
   };
 
   return (
-    <SoundSettingsContainer $isVisible={isVisible}>
+    <SoundSettingsContainer>
       <SoundControlsWrapper>
         <VolumeSliderWrapper>
           <VolumeSlider

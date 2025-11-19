@@ -61,13 +61,11 @@ export interface MainButtonProps {
 }
 
 export interface SettingsViewProps {
-  isVisible: boolean;
   tempSettings: Settings;
   updateTempSetting: (key: keyof Settings, value: number) => void;
 }
 
 export interface SoundSettingsViewProps {
-  isVisible: boolean;
   tempSoundSettings: SoundSettings;
   updateTempSoundSetting: (soundType: SoundType) => void;
   updateTempVolume: (volume: number) => void;

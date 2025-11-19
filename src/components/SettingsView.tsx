@@ -4,24 +4,19 @@ import { theme } from '@/constants/theme';
 import { TimeSettingsRow } from '@/components/TimeSettingsRow';
 import type { SettingsViewProps } from '@/types';
 
-interface SettingsContainerProps {
-  $isVisible: boolean;
-}
-
-const SettingsContainer = styled.div<SettingsContainerProps>`
+const SettingsContainer = styled.div`
   font-size: ${theme.typography.fontSize.small};
-  display: ${(props) => props.$isVisible ? 'flex' : 'none'};
+  display: flex;
   flex-direction: column;
   gap: 5px;
 `;
 
 export const SettingsView: React.FC<SettingsViewProps> = ({
-  isVisible,
   tempSettings,
   updateTempSetting,
 }) => {
   return (
-    <SettingsContainer $isVisible={isVisible}>
+    <SettingsContainer>
       <TimeSettingsRow
         label="Min"
         hours={tempSettings.minHours}
