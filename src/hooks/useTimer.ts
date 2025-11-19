@@ -1,5 +1,5 @@
 import {
-  useCallback, useEffect, useRef, useState,
+  useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
 import {
   COUNTDOWN_NUMBERS, MAIN_BUTTON_TEXT, MILLISECONDS_PER_SECOND,
@@ -21,12 +21,12 @@ type TimerState = 'idle' | 'countdown' | 'running';
 
 export const useTimer = (settings: Settings, soundSettings: SoundSettings): UseTimerReturn => {
   const [timerState, setTimerState] = useState<TimerState>('idle');
-  const [mainButtonText, setMainButtonText] = useState<string>(MAIN_BUTTON_TEXT);
+  const [remainingTime, setRemainingTime] = useState<number>(0);
+  const [countdownValue, setCountdownValue] = useState<string>('');
   const [isBeeping, setIsBeeping] = useState<boolean>(false);
 
   const timerStopperRef = useRef<(() => void) | null>(null);
   const countdownTimeoutsRef = useRef<Timeout[]>([]);
-  const remainingRef = useRef<number>(0);
   const soundSettingsRef = useRef<SoundSettings>(soundSettings);
 
   useEffect(() => {
@@ -51,20 +51,22 @@ export const useTimer = (settings: Settings, soundSettings: SoundSettings): UseT
   }, []);
 
   const tick = useCallback((): void => {
-    remainingRef.current = remainingRef.current - 1;
-    const newRemaining = remainingRef.current;
+    setRemainingTime((prev) => {
+      const newRemaining = prev - 1;
 
-    if (newRemaining <= 0) {
-      void playSelectedSound();
-      const newInterval = getRandomInterval();
+      if (newRemaining <= 0) {
+        void playSelectedSound();
+        const newInterval = getRandomInterval();
 
-      remainingRef.current = newInterval;
-      updateOverlay(formatTime(newInterval));
-      setMainButtonText(formatTime(newInterval));
-    } else {
+        updateOverlay(formatTime(newInterval));
+
+        return newInterval;
+      }
+
       updateOverlay(formatTime(newRemaining));
-      setMainButtonText(formatTime(newRemaining));
-    }
+
+      return newRemaining;
+    });
   }, [getRandomInterval, playSelectedSound, updateOverlay]);
 
   const stop = useCallback((): void => {
@@ -77,7 +79,8 @@ export const useTimer = (settings: Settings, soundSettings: SoundSettings): UseT
     countdownTimeoutsRef.current = [];
 
     setTimerState('idle');
-    setMainButtonText(MAIN_BUTTON_TEXT);
+    setRemainingTime(0);
+    setCountdownValue('');
     updateOverlay('');
   }, [updateOverlay]);
 
@@ -91,7 +94,7 @@ export const useTimer = (settings: Settings, soundSettings: SoundSettings): UseT
     for (const number of COUNTDOWN_NUMBERS) {
       const countdownDigit = String(number);
 
-      setMainButtonText(countdownDigit);
+      setCountdownValue(countdownDigit);
       updateOverlay(countdownDigit);
       void playSelectedSound();
 
@@ -103,11 +106,11 @@ export const useTimer = (settings: Settings, soundSettings: SoundSettings): UseT
     }
 
     setTimerState('running');
+    setCountdownValue('');
 
     const interval = getRandomInterval();
 
-    remainingRef.current = interval;
-    setMainButtonText(formatTime(interval));
+    setRemainingTime(interval);
     updateOverlay(formatTime(interval));
 
     timerStopperRef.current = createAccurateTimer(tick, MILLISECONDS_PER_SECOND);
@@ -121,13 +124,25 @@ export const useTimer = (settings: Settings, soundSettings: SoundSettings): UseT
     }
   }, [timerState, start, stop]);
 
+  const mainButtonText = useMemo(() => {
+    if (timerState === 'countdown') {
+      return countdownValue;
+    }
+
+    if (timerState === 'running') {
+      return formatTime(remainingTime);
+    }
+
+    return MAIN_BUTTON_TEXT;
+  }, [timerState, countdownValue, remainingTime]);
+
   const isRunning = timerState === 'running';
   const isCountingDown = timerState === 'countdown';
 
   return {
     isRunning,
     isCountingDown,
-    remaining: remainingRef.current,
+    remaining: remainingTime,
     isBeeping,
     mainButtonText,
     toggleTimer,
