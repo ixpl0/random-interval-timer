@@ -18,22 +18,14 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   return (
     <SettingsContainer>
       <TimeSettingsRow
-        label="Min"
-        hours={tempSettings.minHours}
-        minutes={tempSettings.minMinutes}
-        seconds={tempSettings.minSeconds}
-        onHoursChange={(value: number) => updateTempSetting('minHours', value)}
-        onMinutesChange={(value: number) => updateTempSetting('minMinutes', value)}
-        onSecondsChange={(value: number) => updateTempSetting('minSeconds', value)}
+        type="min"
+        tempSettings={tempSettings}
+        updateTempSetting={updateTempSetting}
       />
       <TimeSettingsRow
-        label="Max"
-        hours={tempSettings.maxHours}
-        minutes={tempSettings.maxMinutes}
-        seconds={tempSettings.maxSeconds}
-        onHoursChange={(value: number) => updateTempSetting('maxHours', value)}
-        onMinutesChange={(value: number) => updateTempSetting('maxMinutes', value)}
-        onSecondsChange={(value: number) => updateTempSetting('maxSeconds', value)}
+        type="max"
+        tempSettings={tempSettings}
+        updateTempSetting={updateTempSetting}
       />
     </SettingsContainer>
   );

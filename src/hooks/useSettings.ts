@@ -48,7 +48,7 @@ export const useSettings = (): UseSettingsReturn => {
     const minTimerInSeconds = convertToSeconds(minHours, minMinutes, minSeconds);
     const maxTimerInSeconds = convertToSeconds(maxHours, maxMinutes, maxSeconds);
 
-    if (!minTimerInSeconds || !maxTimerInSeconds || minTimerInSeconds > maxTimerInSeconds) {
+    if (minTimerInSeconds === 0 || maxTimerInSeconds === 0 || minTimerInSeconds > maxTimerInSeconds) {
       return;
     }
 

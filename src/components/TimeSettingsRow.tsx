@@ -16,24 +16,21 @@ const SettingsLabel = styled.div`
 `;
 
 export const TimeSettingsRow: React.FC<TimeSettingsRowProps> = ({
-  label,
-  hours,
-  minutes,
-  seconds,
-  onHoursChange,
-  onMinutesChange,
-  onSecondsChange,
+  type,
+  tempSettings,
+  updateTempSetting,
 }) => {
+  const label = type === 'min' ? 'Min' : 'Max';
+
   return (
     <SettingsRow>
       <SettingsLabel>{label}:</SettingsLabel>
       <TimeInput
-        hours={hours}
-        minutes={minutes}
-        seconds={seconds}
-        onHoursChange={onHoursChange}
-        onMinutesChange={onMinutesChange}
-        onSecondsChange={onSecondsChange}
+        type={type}
+        tempSettings={tempSettings}
+        onHoursChange={(value: number) => updateTempSetting(`${type}Hours`, value)}
+        onMinutesChange={(value: number) => updateTempSetting(`${type}Minutes`, value)}
+        onSecondsChange={(value: number) => updateTempSetting(`${type}Seconds`, value)}
       />
     </SettingsRow>
   );

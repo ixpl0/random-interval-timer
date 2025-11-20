@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { theme } from '@/constants/theme';
+import { convertToSeconds } from '@/utils/timeUtils';
 import type { TimeInputProps } from '@/types';
 
 const TimeInputContainer = styled.div`
@@ -9,9 +10,13 @@ const TimeInputContainer = styled.div`
   gap: ${theme.sizes.gapSmall};
 `;
 
-const TimeInputField = styled.input`
+interface TimeInputFieldProps {
+  $isInvalid: boolean;
+}
+
+const TimeInputField = styled.input<TimeInputFieldProps>`
   background-color: ${theme.colors.backgroundSecondary};
-  border: 1px solid ${theme.colors.borderPrimary};
+  border: 1px solid ${(props) => (props.$isInvalid ? theme.colors.danger : theme.colors.borderPrimary)};
   border-radius: ${theme.sizes.borderRadiusSmall};
   color: ${theme.colors.textPrimary};
   font-family: ${theme.typography.fontFamily};
@@ -21,10 +26,11 @@ const TimeInputField = styled.input`
   text-align: center;
   user-select: auto;
   -webkit-app-region: no-drag;
+  transition: border-color ${theme.animations.transition.fast};
 
   &:focus {
     outline: none;
-    border-color: ${theme.colors.borderFocus};
+    border-color: ${(props) => (props.$isInvalid ? theme.colors.danger : theme.colors.borderFocus)};
   }
 
   &::-webkit-outer-spin-button,
@@ -42,13 +48,31 @@ const TimeSeparator = styled.span`
 `;
 
 export const TimeInput: React.FC<TimeInputProps> = ({
-  hours,
-  minutes,
-  seconds,
+  type,
+  tempSettings,
   onHoursChange,
   onMinutesChange,
   onSecondsChange,
 }) => {
+  const {
+    minHours,
+    minMinutes,
+    minSeconds,
+    maxHours,
+    maxMinutes,
+    maxSeconds,
+  } = tempSettings;
+
+  const minTotalSeconds = convertToSeconds(minHours, minMinutes, minSeconds);
+  const maxTotalSeconds = convertToSeconds(maxHours, maxMinutes, maxSeconds);
+  const isMinGreaterThanMax = minTotalSeconds > maxTotalSeconds;
+  const isCurrentRowZero = (type === 'min' && minTotalSeconds === 0) || (type === 'max' && maxTotalSeconds === 0);
+  const isInvalid = isMinGreaterThanMax || isCurrentRowZero;
+
+  const hours = type === 'min' ? minHours : maxHours;
+  const minutes = type === 'min' ? minMinutes : maxMinutes;
+  const seconds = type === 'min' ? minSeconds : maxSeconds;
+
   const handleHoursChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     onHoursChange(parseInt(e.target.value, 10) || 0);
   };
@@ -69,6 +93,7 @@ export const TimeInput: React.FC<TimeInputProps> = ({
         onChange={handleHoursChange}
         min="0"
         max="99"
+        $isInvalid={isInvalid}
       />
       <TimeSeparator>:</TimeSeparator>
       <TimeInputField
@@ -77,6 +102,7 @@ export const TimeInput: React.FC<TimeInputProps> = ({
         onChange={handleMinutesChange}
         min="0"
         max="59"
+        $isInvalid={isInvalid}
       />
       <TimeSeparator>:</TimeSeparator>
       <TimeInputField
@@ -85,6 +111,7 @@ export const TimeInput: React.FC<TimeInputProps> = ({
         onChange={handleSecondsChange}
         min="0"
         max="59"
+        $isInvalid={isInvalid}
       />
     </TimeInputContainer>
   );
