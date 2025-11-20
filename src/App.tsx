@@ -91,13 +91,11 @@ export const App: React.FC = () => {
       <Main>
         {activeView === 'settings' ? (
           <SettingsView
-            isVisible
             tempSettings={tempSettings}
             updateTempSetting={updateTempSetting}
           />
         ) : activeView === 'soundSettings' ? (
           <SoundSettingsView
-            isVisible
             tempSoundSettings={tempSoundSettings}
             updateTempSoundSetting={updateTempSoundSetting}
             updateTempVolume={updateTempVolume}

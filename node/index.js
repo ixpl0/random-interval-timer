@@ -10,6 +10,7 @@ const { createOverlayIcon } = require('./overlayIcon');
 
 let mainWindow;
 let powerSaveId;
+let store;
 
 const ICON_PATH = app.isPackaged
   ? path.join(path.dirname(process.execPath), 'resources', 'app', 'node', 'icon.ico')
@@ -146,8 +147,22 @@ app.on('child-process-gone', (event, details) => {
   process.exit(1);
 });
 
-app.whenReady()
-  .then(() => {
-    app.setAppUserModelId('ixpl0.random-interval-timer');
-    createWindow();
+const initialize = async () => {
+  const { default: Store } = await import('electron-store');
+  store = new Store();
+
+  ipcMain.handle('get-setting', async (event, key) => {
+    return store.get(key);
   });
+
+  ipcMain.handle('set-setting', async (event, key, value) => {
+    store.set(key, value);
+  });
+
+  app.setAppUserModelId('ixpl0.random-interval-timer');
+  createWindow();
+}
+
+app.whenReady()
+  .then(initialize);
+

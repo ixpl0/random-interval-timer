@@ -1,4 +1,8 @@
-import { useCallback, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import {
   DEFAULT_SETTINGS, MAX_HOURS, MAX_MINUTES, MAX_SECONDS,
 } from '@/constants';
@@ -9,7 +13,29 @@ export const useSettings = (): UseSettingsReturn => {
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
   const [tempSettings, setTempSettings] = useState<Settings>(settings);
 
-  const applySettings = useCallback(() => {
+  useEffect(() => {
+    const loadSettings = async (): Promise<void> => {
+      const storedSettings = await window.electronAPI.getSetting('timer');
+
+      if (storedSettings) {
+        const newSettings = {
+          ...DEFAULT_SETTINGS,
+          ...storedSettings as Settings,
+        };
+
+        setSettings(newSettings);
+        setTempSettings(newSettings);
+      }
+    };
+
+    void loadSettings();
+  }, []);
+
+  useEffect(() => {
+    setTempSettings(settings);
+  }, [settings]);
+
+  const applySettings: () => Promise<void> = useCallback(async () => {
     const {
       maxSeconds,
       maxHours,
@@ -26,6 +52,7 @@ export const useSettings = (): UseSettingsReturn => {
       return;
     }
 
+    await window.electronAPI.setSetting('timer', tempSettings);
     setSettings({ ...tempSettings });
   }, [tempSettings]);
 

@@ -1,4 +1,6 @@
-import { useCallback, useState } from 'react';
+import {
+  useCallback, useEffect, useState,
+} from 'react';
 import type {
   SoundSettings,
   SoundType,
@@ -14,7 +16,30 @@ export const useSoundSettings = (): UseSoundSettingsReturn => {
   const [soundSettings, setSoundSettings] = useState<SoundSettings>(DEFAULT_SOUND_SETTINGS);
   const [tempSoundSettings, setTempSoundSettings] = useState<SoundSettings>(DEFAULT_SOUND_SETTINGS);
 
-  const applySoundSettings = useCallback((): void => {
+  useEffect(() => {
+    const loadSettings = async (): Promise<void> => {
+      const storedSettings = await window.electronAPI.getSetting('sound');
+
+      if (storedSettings) {
+        const newSettings = {
+          ...DEFAULT_SOUND_SETTINGS,
+          ...storedSettings as SoundSettings,
+        };
+
+        setSoundSettings(newSettings);
+        setTempSoundSettings(newSettings);
+      }
+    };
+
+    loadSettings();
+  }, []);
+
+  useEffect(() => {
+    setTempSoundSettings(soundSettings);
+  }, [soundSettings]);
+
+  const applySoundSettings: () => Promise<void> = useCallback(async () => {
+    await window.electronAPI.setSetting('sound', tempSoundSettings);
     setSoundSettings(tempSoundSettings);
   }, [tempSoundSettings]);
 

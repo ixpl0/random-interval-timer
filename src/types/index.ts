@@ -94,6 +94,8 @@ export interface ElectronAPI {
   close: () => void;
   minimize: () => void;
   setOverlayIcon: (dataURL: string) => void;
+  getSetting: (key: string) => Promise<unknown>;
+  setSetting: (key: string, value: unknown) => Promise<void>;
   initLog?: (message: string) => void;
   writeLog?: (message: string) => void;
 }
