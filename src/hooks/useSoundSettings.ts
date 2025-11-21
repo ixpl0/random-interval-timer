@@ -57,11 +57,16 @@ export const useSoundSettings = (): UseSoundSettingsReturn => {
     }));
   }, []);
 
+  const resetTempSoundSettings = useCallback(() => {
+    setTempSoundSettings(soundSettings);
+  }, [soundSettings]);
+
   return {
     applySoundSettings,
     soundSettings,
     tempSoundSettings,
     updateTempSoundSetting,
     updateTempVolume,
+    resetTempSoundSettings,
   };
 };

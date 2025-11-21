@@ -29,6 +29,7 @@ export interface UseSettingsReturn {
   tempSettings: Settings;
   applySettings: () => void;
   updateTempSetting: (key: keyof Settings, value: number) => void;
+  resetTempSettings: () => void;
 }
 
 export interface UseSoundSettingsReturn {
@@ -37,6 +38,7 @@ export interface UseSoundSettingsReturn {
   applySoundSettings: () => void;
   updateTempSoundSetting: (soundType: SoundType) => void;
   updateTempVolume: (volume: number) => void;
+  resetTempSoundSettings: () => void;
 }
 
 export type ActiveView = 'main' | 'settings' | 'soundSettings';

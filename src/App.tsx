@@ -45,6 +45,7 @@ export const App: React.FC = () => {
     tempSettings,
     applySettings,
     updateTempSetting,
+    resetTempSettings,
   } = useSettings();
 
   const {
@@ -53,6 +54,7 @@ export const App: React.FC = () => {
     applySoundSettings,
     updateTempSoundSetting,
     updateTempVolume,
+    resetTempSoundSettings,
   } = useSoundSettings();
 
   const {
@@ -77,8 +79,10 @@ export const App: React.FC = () => {
   };
 
   const goToMain = useCallback(() => {
+    resetTempSettings();
+    resetTempSoundSettings();
     setActiveView('main');
-  }, []);
+  }, [resetTempSettings, resetTempSoundSettings]);
 
   return (
     <PageWrapper>

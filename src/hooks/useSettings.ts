@@ -66,10 +66,15 @@ export const useSettings = (): UseSettingsReturn => {
     }));
   }, []);
 
+  const resetTempSettings = useCallback(() => {
+    setTempSettings(settings);
+  }, [settings]);
+
   return {
     settings,
     tempSettings,
     applySettings,
     updateTempSetting,
+    resetTempSettings,
   };
 };
