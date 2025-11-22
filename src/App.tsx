@@ -8,7 +8,7 @@ import { theme } from '@/constants/theme';
 import { useSettings } from '@/hooks/useSettings';
 import { useSoundSettings } from '@/hooks/useSoundSettings';
 import { useTimer } from '@/hooks/useTimer';
-import { initAudio } from '@/utils/audioUtils';
+import { cleanupAudio, initAudio } from '@/utils/audioUtils';
 import { Header } from '@/components/Header';
 import { MainButton } from '@/components/MainButton';
 import { SettingsView } from '@/components/SettingsView';
@@ -66,6 +66,8 @@ export const App: React.FC = () => {
 
   useEffect(() => {
     initAudio();
+
+    return cleanupAudio;
   }, []);
 
   const settingsActions = {

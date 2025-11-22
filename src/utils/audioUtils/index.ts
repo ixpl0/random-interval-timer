@@ -7,9 +7,11 @@ import {
   triggerPendingSound,
 } from './pendingSoundManager';
 import { executeSoundByType } from './soundExecutor';
-import { getPendingSoundState } from './audioState';
+import { getPendingSoundState, setPendingSound } from './audioState';
 
 const AUDIO_CONTEXT_KEEPALIVE_INTERVAL_MS = 15000;
+
+let keepAliveIntervalId: ReturnType<typeof setInterval> | null = null;
 
 const playSilentTone = (context: AudioContext): void => {
   const oscillator = context.createOscillator();
@@ -23,7 +25,11 @@ const playSilentTone = (context: AudioContext): void => {
 };
 
 const keepAudioContextAlive = (): void => {
-  setInterval(() => {
+  if (keepAliveIntervalId !== null) {
+    return;
+  }
+
+  keepAliveIntervalId = setInterval(() => {
     const context = getOrCreateAudioContext();
 
     if (context.state === 'suspended') {
@@ -32,6 +38,13 @@ const keepAudioContextAlive = (): void => {
       playSilentTone(context);
     }
   }, AUDIO_CONTEXT_KEEPALIVE_INTERVAL_MS);
+};
+
+export const cleanupAudio = (): void => {
+  if (keepAliveIntervalId !== null) {
+    clearInterval(keepAliveIntervalId);
+    keepAliveIntervalId = null;
+  }
 };
 
 export const initAudio = (): void => {
@@ -56,7 +69,7 @@ export const playSound = async (soundType: SoundType, volume: number): Promise<v
     return;
   }
 
-  state.soundType = soundType;
+  setPendingSound(soundType, volume);
   const pendingPlayback = createPendingSoundPromise();
 
   if (context.state === 'running') {

@@ -11,10 +11,7 @@ import { createAccurateTimer } from '@/utils/timerUtils';
 import { playSound } from '@/utils/audioUtils';
 import { setOverlayIcon } from '@/utils/electronUtils.ts';
 import type {
-  Settings,
-  SoundSettings,
-  Timeout,
-  UseTimerReturn,
+  Settings, SoundSettings, Timeout, UseTimerReturn,
 } from '@/types';
 
 type TimerState = 'idle' | 'countdown' | 'running';
@@ -51,23 +48,24 @@ export const useTimer = (settings: Settings, soundSettings: SoundSettings): UseT
   }, []);
 
   const tick = useCallback((): void => {
-    setRemainingTime((prev) => {
-      const newRemaining = prev - 1;
+    setRemainingTime((prev) => prev - 1);
+  }, []);
 
-      if (newRemaining <= 0) {
-        void playSelectedSound();
-        const newInterval = getRandomInterval();
+  useEffect(() => {
+    if (timerState !== 'running') {
+      return;
+    }
 
-        updateOverlay(formatTime(newInterval));
+    if (remainingTime <= 0) {
+      void playSelectedSound();
+      const newInterval = getRandomInterval();
 
-        return newInterval;
-      }
-
-      updateOverlay(formatTime(newRemaining));
-
-      return newRemaining;
-    });
-  }, [getRandomInterval, playSelectedSound, updateOverlay]);
+      setRemainingTime(newInterval);
+      updateOverlay(formatTime(newInterval));
+    } else {
+      updateOverlay(formatTime(remainingTime));
+    }
+  }, [remainingTime, timerState, playSelectedSound, getRandomInterval, updateOverlay]);
 
   const stop = useCallback((): void => {
     if (timerStopperRef.current) {

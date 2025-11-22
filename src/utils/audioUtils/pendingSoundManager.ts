@@ -1,6 +1,10 @@
 import { PENDING_RETRY_INTERVAL_MS } from './types';
 import {
-  clearPendingRetry, getPendingSoundState, resetPendingSoundState,
+  clearPendingRetry,
+  getPendingSoundState,
+  resetPendingSoundState,
+  setPendingPromise,
+  setRetryTimeoutId,
 } from './audioState';
 import { executeSoundByType } from './soundExecutor';
 import { ensureRunningContext } from './audioContextManager';
@@ -8,11 +12,15 @@ import { ensureRunningContext } from './audioContextManager';
 export const createPendingSoundPromise = (): Promise<void> => {
   const state = getPendingSoundState();
 
-  state.promise ||= new Promise<void>((resolve) => {
-    state.resolve = resolve;
+  if (state.promise) {
+    return state.promise;
+  }
+
+  const promise = new Promise<void>((resolve) => {
+    setPendingPromise(promise, resolve);
   });
 
-  return state.promise;
+  return promise;
 };
 
 export const triggerPendingSound = (context: AudioContext): void => {
@@ -24,12 +32,13 @@ export const triggerPendingSound = (context: AudioContext): void => {
 
   clearPendingRetry();
 
-  const soundType = state.soundType;
-  const resolve = state.resolve;
+  const {
+    soundType, volume, resolve,
+  } = state;
 
   resetPendingSoundState();
 
-  executeSoundByType(soundType, context, () => {
+  executeSoundByType(soundType, context, volume, () => {
     resolve?.();
   });
 };
@@ -59,8 +68,8 @@ export const schedulePendingSoundRetry = (): void => {
     return;
   }
 
-  state.retryTimeoutId = setTimeout(() => {
-    state.retryTimeoutId = null;
+  const timeoutId = setTimeout(() => {
+    setRetryTimeoutId(null);
     void processPendingSound()
       .then((processed) => {
         if (!processed) {
@@ -68,5 +77,7 @@ export const schedulePendingSoundRetry = (): void => {
         }
       });
   }, PENDING_RETRY_INTERVAL_MS);
+
+  setRetryTimeoutId(timeoutId);
 };
 
