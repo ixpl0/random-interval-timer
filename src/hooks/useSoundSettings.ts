@@ -1,11 +1,8 @@
-import {
-  useCallback, useEffect, useState,
-} from 'react';
+import { useCallback } from 'react';
 import type {
-  SoundSettings,
-  SoundType,
-  UseSoundSettingsReturn,
+  SoundSettings, SoundType, UseSoundSettingsReturn,
 } from '@/types';
+import { usePersistentSettings } from './usePersistentSettings';
 
 const DEFAULT_SOUND_SETTINGS: SoundSettings = {
   selectedSound: 'beep',
@@ -13,58 +10,32 @@ const DEFAULT_SOUND_SETTINGS: SoundSettings = {
 };
 
 export const useSoundSettings = (): UseSoundSettingsReturn => {
-  const [soundSettings, setSoundSettings] = useState<SoundSettings>(DEFAULT_SOUND_SETTINGS);
-  const [tempSoundSettings, setTempSoundSettings] = useState<SoundSettings>(DEFAULT_SOUND_SETTINGS);
-
-  useEffect(() => {
-    const loadSettings = async (): Promise<void> => {
-      const storedSettings = await window.electronAPI.getSetting('sound');
-
-      if (storedSettings) {
-        const newSettings = {
-          ...DEFAULT_SOUND_SETTINGS,
-          ...storedSettings as SoundSettings,
-        };
-
-        setSoundSettings(newSettings);
-        setTempSoundSettings(newSettings);
-      }
-    };
-
-    loadSettings();
-  }, []);
-
-  useEffect(() => {
-    setTempSoundSettings(soundSettings);
-  }, [soundSettings]);
-
-  const applySoundSettings: () => Promise<void> = useCallback(async () => {
-    await window.electronAPI.setSetting('sound', tempSoundSettings);
-    setSoundSettings(tempSoundSettings);
-  }, [tempSoundSettings]);
+  const {
+    settings: soundSettings,
+    tempSettings: tempSoundSettings,
+    setTempSettings,
+    applySettings: applySoundSettings,
+    resetTempSettings: resetTempSoundSettings,
+  } = usePersistentSettings<SoundSettings>('sound', DEFAULT_SOUND_SETTINGS);
 
   const updateTempSoundSetting = useCallback((soundType: SoundType): void => {
-    setTempSoundSettings((prev) => ({
+    setTempSettings((prev) => ({
       ...prev,
       selectedSound: soundType,
     }));
-  }, []);
+  }, [setTempSettings]);
 
   const updateTempVolume = useCallback((volume: number): void => {
-    setTempSoundSettings((prev) => ({
+    setTempSettings((prev) => ({
       ...prev,
       volume,
     }));
-  }, []);
-
-  const resetTempSoundSettings = useCallback(() => {
-    setTempSoundSettings(soundSettings);
-  }, [soundSettings]);
+  }, [setTempSettings]);
 
   return {
-    applySoundSettings,
     soundSettings,
     tempSoundSettings,
+    applySoundSettings,
     updateTempSoundSetting,
     updateTempVolume,
     resetTempSoundSettings,

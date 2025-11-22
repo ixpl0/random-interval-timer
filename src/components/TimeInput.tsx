@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { theme } from '@/constants/theme';
-import { convertToSeconds } from '@/utils/timeUtils';
 import type { TimeInputProps } from '@/types';
 
 const TimeInputContainer = styled.div`
@@ -48,31 +47,14 @@ const TimeSeparator = styled.span`
 `;
 
 export const TimeInput: React.FC<TimeInputProps> = ({
-  type,
-  tempSettings,
+  hours,
+  minutes,
+  seconds,
   onHoursChange,
   onMinutesChange,
   onSecondsChange,
+  isInvalid,
 }) => {
-  const {
-    minHours,
-    minMinutes,
-    minSeconds,
-    maxHours,
-    maxMinutes,
-    maxSeconds,
-  } = tempSettings;
-
-  const minTotalSeconds = convertToSeconds(minHours, minMinutes, minSeconds);
-  const maxTotalSeconds = convertToSeconds(maxHours, maxMinutes, maxSeconds);
-  const isMinGreaterThanMax = minTotalSeconds > maxTotalSeconds;
-  const isCurrentRowZero = (type === 'min' && minTotalSeconds === 0) || (type === 'max' && maxTotalSeconds === 0);
-  const isInvalid = isMinGreaterThanMax || isCurrentRowZero;
-
-  const hours = type === 'min' ? minHours : maxHours;
-  const minutes = type === 'min' ? minMinutes : maxMinutes;
-  const seconds = type === 'min' ? minSeconds : maxSeconds;
-
   const handleHoursChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     onHoursChange(parseInt(e.target.value, 10) || 0);
   };

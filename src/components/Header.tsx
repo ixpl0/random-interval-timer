@@ -82,88 +82,85 @@ export const Header: React.FC<HeaderProps> = ({
   soundSettingsActions,
   goToMain,
 }) => {
-  const isSettingsVisible = activeView === 'settings';
-  const isSoundSettingsVisible = activeView === 'soundSettings';
+  const isMainView = activeView === 'main';
+  const isSettingsView = activeView === 'settings';
+  const isSoundSettingsView = activeView === 'soundSettings';
 
   const handleSoundSettingsClick = (): void => {
-    if (isSoundSettingsVisible) {
+    if (isSoundSettingsView) {
       soundSettingsActions.apply();
       goToMain();
-    } else if (isSettingsVisible) {
-      settingsActions.apply();
-      soundSettingsActions.show();
     } else {
+      if (isSettingsView) {
+        settingsActions.apply();
+      }
+
       soundSettingsActions.show();
     }
   };
 
   const handleSettingsClick = (): void => {
-    if (isSettingsVisible) {
+    if (isSettingsView) {
       settingsActions.apply();
       goToMain();
-    } else if (isSoundSettingsVisible) {
-      soundSettingsActions.apply();
-      settingsActions.show();
     } else {
+      if (isSoundSettingsView) {
+        soundSettingsActions.apply();
+      }
+
       settingsActions.show();
     }
   };
 
   const handleCloseClick = (): void => {
-    if (isSettingsVisible || isSoundSettingsVisible) {
-      goToMain();
-    } else {
+    if (isMainView) {
       closeWindow();
+    } else {
+      goToMain();
     }
   };
 
-  const handleMinimizeClick = (): void => {
-    minimizeWindow();
-  };
-
-  const soundSettingsButtonTitle = (() => {
-    if (isSoundSettingsVisible) {
+  const getSoundSettingsButtonTitle = (): string => {
+    if (isSoundSettingsView) {
       return 'Apply';
     }
 
-    if (isSettingsVisible) {
+    if (isSettingsView) {
       return 'Apply & Go to Sound Settings';
     }
 
     return 'Sound Settings';
-  })();
+  };
 
-  const settingsButtonTitle = (() => {
-    if (isSettingsVisible) {
+  const getSettingsButtonTitle = (): string => {
+    if (isSettingsView) {
       return 'Apply';
     }
 
-    if (isSoundSettingsVisible) {
+    if (isSoundSettingsView) {
       return 'Apply & Go to Settings';
     }
 
     return 'Settings';
-  })();
-
-  const closeButtonTitle = (isSettingsVisible || isSoundSettingsVisible) ? 'Cancel' : 'Close';
+  };
 
   return (
     <HeaderContainer>
       <HeaderButtons>
         <SoundSettingsButton
-          title={soundSettingsButtonTitle}
+          title={getSoundSettingsButtonTitle()}
           onClick={handleSoundSettingsClick}
         />
         <SettingsButton
-          title={settingsButtonTitle}
+          title={getSettingsButtonTitle()}
           onClick={handleSettingsClick}
         />
         <MinimizeButton
           title="Minimize"
-          onClick={handleMinimizeClick}
+          onClick={minimizeWindow}
         />
         <CloseButton
-          title={closeButtonTitle}
+          title={isMainView ? 'Close' : 'Cancel'}
           onClick={handleCloseClick}
         />
       </HeaderButtons>

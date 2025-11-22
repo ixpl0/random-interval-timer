@@ -76,17 +76,20 @@ export interface SoundSettingsViewProps {
 export type TimeSettingType = 'min' | 'max';
 
 export interface TimeInputProps {
-  type: TimeSettingType;
-  tempSettings: Settings;
+  hours: number;
+  minutes: number;
+  seconds: number;
   onHoursChange: (value: number) => void;
   onMinutesChange: (value: number) => void;
   onSecondsChange: (value: number) => void;
+  isInvalid: boolean;
 }
 
 export interface TimeSettingsRowProps {
   type: TimeSettingType;
   tempSettings: Settings;
   updateTempSetting: (key: keyof Settings, value: number) => void;
+  isInvalid: boolean;
 }
 
 export interface SoundOption {

@@ -19,18 +19,24 @@ export const TimeSettingsRow: React.FC<TimeSettingsRowProps> = ({
   type,
   tempSettings,
   updateTempSetting,
+  isInvalid,
 }) => {
   const label = type === 'min' ? 'Min' : 'Max';
+  const hours = type === 'min' ? tempSettings.minHours : tempSettings.maxHours;
+  const minutes = type === 'min' ? tempSettings.minMinutes : tempSettings.maxMinutes;
+  const seconds = type === 'min' ? tempSettings.minSeconds : tempSettings.maxSeconds;
 
   return (
     <SettingsRow>
       <SettingsLabel>{label}:</SettingsLabel>
       <TimeInput
-        type={type}
-        tempSettings={tempSettings}
+        hours={hours}
+        minutes={minutes}
+        seconds={seconds}
         onHoursChange={(value: number) => updateTempSetting(`${type}Hours`, value)}
         onMinutesChange={(value: number) => updateTempSetting(`${type}Minutes`, value)}
         onSecondsChange={(value: number) => updateTempSetting(`${type}Seconds`, value)}
+        isInvalid={isInvalid}
       />
     </SettingsRow>
   );

@@ -1,50 +1,24 @@
-import {
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import { useCallback } from 'react';
 import {
   DEFAULT_SETTINGS, MAX_HOURS, MAX_MINUTES, MAX_SECONDS,
 } from '@/constants';
 import { convertToSeconds, validateTimeValue } from '@/utils/timeUtils';
 import type { Settings, UseSettingsReturn } from '@/types';
+import { usePersistentSettings } from './usePersistentSettings';
 
 export const useSettings = (): UseSettingsReturn => {
-  const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
-  const [tempSettings, setTempSettings] = useState<Settings>(settings);
+  const {
+    settings,
+    tempSettings,
+    setTempSettings,
+    applySettings: apply,
+    resetTempSettings,
+  } = usePersistentSettings<Settings>('timer', DEFAULT_SETTINGS);
 
-  useEffect(() => {
-    const loadSettings = async (): Promise<void> => {
-      const storedSettings = await window.electronAPI.getSetting('timer');
-
-      if (storedSettings) {
-        const newSettings = {
-          ...DEFAULT_SETTINGS,
-          ...storedSettings as Settings,
-        };
-
-        setSettings(newSettings);
-        setTempSettings(newSettings);
-      }
-    };
-
-    void loadSettings();
-  }, []);
-
-  useEffect(() => {
-    setTempSettings(settings);
-  }, [settings]);
-
-  const applySettings: () => Promise<void> = useCallback(async () => {
+  const applySettings = useCallback(async () => {
     const {
-      maxSeconds,
-      maxHours,
-      minMinutes,
-      maxMinutes,
-      minHours,
-      minSeconds,
+      minHours, minMinutes, minSeconds, maxHours, maxMinutes, maxSeconds,
     } = tempSettings;
-
     const minTimerInSeconds = convertToSeconds(minHours, minMinutes, minSeconds);
     const maxTimerInSeconds = convertToSeconds(maxHours, maxMinutes, maxSeconds);
 
@@ -52,23 +26,25 @@ export const useSettings = (): UseSettingsReturn => {
       return;
     }
 
-    await window.electronAPI.setSetting('timer', tempSettings);
-    setSettings({ ...tempSettings });
-  }, [tempSettings]);
+    await apply();
+  }, [tempSettings, apply]);
 
   const updateTempSetting = useCallback((key: keyof Settings, value: number) => {
-    const maxValue = key.includes('Hours') ? MAX_HOURS
-      : key.includes('Minutes') ? MAX_MINUTES : MAX_SECONDS;
+    let maxValue: number;
+
+    if (key.endsWith('Hours')) {
+      maxValue = MAX_HOURS;
+    } else if (key.endsWith('Minutes')) {
+      maxValue = MAX_MINUTES;
+    } else {
+      maxValue = MAX_SECONDS;
+    }
 
     setTempSettings((prev) => ({
       ...prev,
       [key]: validateTimeValue(value, maxValue),
     }));
-  }, []);
-
-  const resetTempSettings = useCallback(() => {
-    setTempSettings(settings);
-  }, [settings]);
+  }, [setTempSettings]);
 
   return {
     settings,
