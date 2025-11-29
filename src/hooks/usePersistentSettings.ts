@@ -25,6 +25,10 @@ export const usePersistentSettings = <T extends object>(
 
   useEffect(() => {
     const loadSettings = async (): Promise<void> => {
+      if (!window?.electronAPI?.getSetting) {
+        return;
+      }
+
       const storedSettings = await window.electronAPI.getSetting(storageKey);
 
       if (storedSettings) {
@@ -46,7 +50,10 @@ export const usePersistentSettings = <T extends object>(
   }, [settings]);
 
   const applySettings = useCallback(async () => {
-    await window.electronAPI.setSetting(storageKey, tempSettings);
+    if (window?.electronAPI?.setSetting) {
+      await window.electronAPI.setSetting(storageKey, tempSettings);
+    }
+
     setSettings(tempSettings);
   }, [tempSettings, storageKey]);
 
