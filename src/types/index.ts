@@ -27,7 +27,7 @@ export interface UseTimerReturn {
 export interface UseSettingsReturn {
   settings: Settings;
   tempSettings: Settings;
-  applySettings: () => void;
+  applySettings: () => Promise<void>;
   updateTempSetting: (key: keyof Settings, value: number) => void;
   resetTempSettings: () => void;
 }
@@ -35,7 +35,7 @@ export interface UseSettingsReturn {
 export interface UseSoundSettingsReturn {
   soundSettings: SoundSettings;
   tempSoundSettings: SoundSettings;
-  applySoundSettings: () => void;
+  applySoundSettings: () => Promise<void>;
   updateTempSoundSetting: (soundType: SoundType) => void;
   updateTempVolume: (volume: number) => void;
   resetTempSoundSettings: () => void;

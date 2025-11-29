@@ -1,6 +1,7 @@
 {
   "name": "random-interval-timer",
   "version": "2.0.0",
+  "type": "module",
   "main": "node/index.js",
   "scripts": {
     "start": "electron .",
@@ -9,8 +10,8 @@
     "preview": "vite preview",
     "dev:vite": "vite",
     "pack": "npm run build && npx @electron/packager . --platform=win32 --arch=x64 --out=dist --overwrite --ignore=packaged --ignore=node_modules/.vite --ignore=.git --ignore=readme --icon=node/icon.ico --app-name=random-timer",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -31,22 +32,22 @@
     "@types/react-dom": "^19.1.6",
     "@typescript-eslint/eslint-plugin": "^8.36.0",
     "@typescript-eslint/parser": "^8.36.0",
+    "@vitejs/plugin-react": "^4.6.0",
     "electron": "^37.8.0",
     "eslint": "^9.31.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.3.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vite": "^7.2.0"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "^4.6.0",
     "canvas": "^3.1.2",
     "electron-store": "^11.0.2",
-    "eslint-plugin-react-refresh": "^0.4.20",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "styled-components": "^6.1.19",
-    "vite": "^7.2.0"
+    "styled-components": "^6.1.19"
   }
 }

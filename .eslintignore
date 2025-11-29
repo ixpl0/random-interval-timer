@@ -1,8 +1,0 @@
-dist/
-dist-react/
-node_modules/
-.idea/
-.vscode/
-
-*.log
-.env*
